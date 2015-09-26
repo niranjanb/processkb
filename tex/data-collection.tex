@@ -1,0 +1,22 @@
+%!TEX root = main.tex
+\section{\label{sec:data-collection}Crowd-sourcing Event Schema Curation}
+One of the main obstacles to developing scalable extraction approaches is the lack of training data. Due to the costs of manual authoring of templates, prior template-driven extraction technologies were developed and evaluated on a small number of domains. Access to large scale training data covering a broad range of domains is critical for both developing and evaluating extraction approaches. We propose to overcome this limitation by using crowd-sourcing to curate the system generated schemas. The key benefit of this approach is that it requires relatively low amounts of effort to modify entries in a schema as opposed to creating new schemas from scratch. 
+
+\subsection{Proposed Method}
+We will build on the approach we used in our preliminary work, where we obtained input from Amazon Mechanical Turkers (Turkers) to evaluate schemas. Getting non-domain experts to annotate the schemas is a challenging task. Schemas are a complex structure with many different elements with associated type information. To reduce the evaluation burden, we sample different groundings for the participants and generated ground versions of the schema and collected judgements on these ground versions. The following is a list of the types of input we will seek in order to construct a high-quality curated dataset.
+\begin{enumerate}
+\item {\bf Correct Errors} -- There are two types of errors that we can identify and correct. First, the generalized relation may be non-sensical due to extraction errors, which is often straightforward to spot. Second, the type assignment for the arguments can be erroneous (e.g., Type: [Musician], played, Type: [Sport]). The type assignment error can be caught at the generalized relation level with the instantiated relation providing further help where needed e.g., (Michael Jackson, played, Baseball).
+\item {\bf Identify Relevant Entries} -- System generated schemas can contain completely irrelevant or topically relevant but not critical information. We will get annotations on each schema entry. Judging relevance requires a determination of the main topic of the schema. In some cases this may not be possible in which case the entire schema will be discarded.
+\item {\bf Identify Missing Entries} -- In our prior work, we noticed that while schemas tended to have high precision, the schemas could miss some important information, especially in domains that do not have regular reporting patterns or for scenarios that include many possible sub-events. We will explore methods for soliciting such missing information.
+\item {\bf Identify Schema Relationships} -- We will also collect user inputs on the relationships between the automatically generated schemas. In keeping with our theme of minimal user inputs, we will first build an automatic method for detecting duplicates or near-duplicates and get Turkers to help only on the set that the system considers as duplicates. Similarly, we will also devise methods to elicit inputs on identifying parent/child relationships between schemas.   
+\item {\bf Annotate Extractions} -- Lastly, we will also curate a event extraction data set. The key idea here is to show a filled out extraction and relevant portions of the documents and elicit a simple yes/no judgment from the user. These annotations will help create a extraction dataset that we can train on when building extractors using the schemas.
+\end{enumerate}
+
+As with any crowd-sourced curation effort, quality control and getting redundant inputs on the same questions will be part of our methodology. We will draw upon lessons learnt from our previous attempt at crowd-sourcing schema evaluation.
+
+\subsection{Contributions}
+
+\begin{itemize}[noitemsep,nolistsep]
+\item First large scale collection of manually curated open-domain schemas. 
+\item A large evaluation data set for event extraction that covers a wide range of domains.
+\end{itemize}

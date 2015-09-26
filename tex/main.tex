@@ -1,0 +1,47 @@
+\documentclass[11pt,onecolumn]{article}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage[hscale=0.8,vscale=0.9]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\newcommand{\eat}[1]{}
+\newcommand{\todo}[1]{\textcolor{blue}{TODO: #1}}
+\input{pgformat}
+\begin{document}
+\include{weld-defns}
+\title{Composing Representations for Processes using Semantic Roles}
+\author{Niranjan Balasubramanian}
+\maketitle
+\newpage
+\thispagestyle{empty}
+%\input{summary}     % A. Project Summary - 1 page
+\newpage
+\tableofcontents    % B. Form 1359
+\thispagestyle{empty}
+\setcounter{section}{0}
+\setcounter{page}{0}
+\newpage
+%
+\setcounter{page}{1}
+\input{intro}
+\input{background}
+\input{representation}
+\input{srl}
+\input{evaluation}
+%\input{extractors}
+%\include{models}
+%\include{applications}
+\input{supporting}
+ 
+{\small
+\bibliographystyle{plain}
+\bibliography{main}
+}
+\end{document}

@@ -1,0 +1,71 @@
+%!TEX root = main.tex
+\begin{center}\textbf{Project Summary}
+\end{center}
+
+Grade level science exams have been proposed as benchmarks to test NLP and AI systems~\cite{?,?,?} and are bringing renewed attention to building reasoning-based QA systems. The exams test student's understanding of a wide variety of knowledge and their ability to use them to reason about new situations. A substantial portion of these questions are about simple physical, chemical, and biological processes. The questions usually describe a scenario and test for the ability to recognize instances of known processes and to draw inferences about the scenario based on the recognized process. 
+
+We propose to automatically construct knowledge about processes using semantic roles.
+
+Several existing resources provide semantic information about general actions and processes. FrameNet, for example, represents semantics of words in terms of the main events that they describe, the entities and their relationships. The information is packed in the form of a frame that has named slots that describe the events, and provides example usages of words in sentences along with annotations of the frame elements. However, we find that nearly a half of the processes covered in fourth grade exams do not have entries in FameNet. Another type of semantic resources are the event schemas and templates which mainly target general events discussed in news articles and not scientific processes. 
+
+
+{\bf Examples}
+
+
+
+
+{\bf Motivation}
+
+Building computational models of knowledge is critical for AI systems that can go beyond retrieving answers. 
+Recent interest in Grade level science exams, and reading comprehension tasks are bringing renewed attention to the problem of building reasoning-based QA system. 
+To make significant advances on these tasks, we need semantic representations of relevant information. 
+
+Several resources provide semantic information about commonly used words. FrameNet, for example, represents semantics of words in terms of the main events that they describe, the entities and their relationships. The information is packed in the form of a frame that has named slots that describe the events, and provides example usages of words in sentences along with annotations of the frame elements. Recent efforts in event extraction research has also sought to build schemas or templates describing open-domain events discussed in news articles. 
+
+Similar semantic representations of scientific concepts would be invaluable. These are essential for building systems that can provide reasoned answers to questions. Even with simpler structured matching approaches, preliminary experiments shows access to such semantic knowledge can improve performance by as much as 13\%. 
+
+
+{\bf Key Insight}
+
+Deep formal representations lend themselves to powerful inference when the knowledge being used is highly accurate. 
+However, automatic extraction into these deep representations is difficult. 
+On the other hand, shallow representations mirror the syntactic constructions in language. 
+This increases the reasoning gap and necessitates additional inference steps that are essentially syntactic transformations (e.g., active to passive).
+Semantic frame-based representations (e.g., AMR) provide a balanced alternative by mapping the syntactic variants into a canonical form.
+Moreover, the frames themselves provide powerful semantics -- rules over the named slots provide rich semantic inferences by relating to other frames.
+
+{\bf Proposal}
+
+Develop a light-weight semantic representation of physical and biological processes. Targeting a semantic representation of processes that provide information necessary to recognize specific instances of processes and to reason about them. The key challenge is in devising representations for processes that
+
+
+{\bf What are the fundamental challenges being addressed?}
+
+1) Sparsity of patterns for each process. We will use distant supervision to address sparsity. 
+2) Correlating syntactic expressions to semantic roles. Learning patterns across all processes does so indirectly. 
+
+{\bf How is this different from X?}
+
+Semantic role style representations but with the following twists:
+
+1) Aggregate roles from multiple sentences. 
+2) Some roles can have multiple values depending on the input. 
+
+
+{\bf Key Technical Contributions}
+
+\begin{enumerate}
+
+\item 
+\item Methods to overcome data sparsity. We will focus on clusterings of processes, relying on ontology to achieve this. 
+\item Induce roles automatically for scaling. 
+
+\end{enumerate}
+
+
+{\bf Broader Impact} 
+
+
+{\bf Keywords} Knowledge extraction, Information extraction, Event extraction, Summarization
+
+%\end{document}

@@ -1,0 +1,32 @@
+% !TEX root =  main.tex
+\section{Evaluation}
+
+Our primary motivation is to compose knowledge that is necessary for grade-level science questions.
+Therefore we propose both an intrinsic evaluation that measures the accuracy of the extracted roles, and an external evaluation where we assess the utility of the roles in question answering.
+
+\subsection{KB Evaluation}
+
+Our goal is to acquire knowledge about processes along relevant role dimensions.
+[{\bf To be filled...]}
+
+
+\subsection{Question Answering using Semantic Roles}
+
+{\bf Testbed}
+Following Clark et al., 2014, we propose to build a large collection of multiple-choice questions at different grade levels. 
+In prior work we leveraged existing collections to select questions. 
+To effectively test the utility of our approach, we propose to create two types of questions in increasing levels of difficultly: 1) Questions that test ability to recognize instances of processes. 2) Questions that require ability to reason about the instance. We will limit the reasoning questions to those that are effectively achieved by following simple axioms defined over the semantic roles. [Example???]
+
+Creating these questions is a difficult task for non-experts. We propose to work with the graduate students in the Department of Education at Stony Brook to collect questions and question templates. 
+Once we have generate question templates that specify what kind of understanding is to be tested, we can scale out the question acquisition process via crowd sourcing. 
+
+{\bf Method}
+
+We use a simple approach to evaluate the utility of semantic roles for question answering. 
+For the recognition questions we will follow our prior work, where we build a supervised role labeler 
+and use it to parse the question to extract a role based representation. 
+Then for each answer option we match the extracted roles against the roles available in the database. 
+
+For reasoning questions, we will utilize the above approach to first recognize the process and identify the roles mentioned in the question. We will utilize hand-written axioms defined over the roles. [Example.?]
+
+

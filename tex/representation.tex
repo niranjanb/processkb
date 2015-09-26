@@ -1,0 +1,60 @@
+% !TEX root =  main.tex
+\section{Representation}
+\label{sec:schemas}
+
+%{\bf What are the guiding principles for the representation?}
+Our goal is to design a representation that meets the inferential needs in downstream applications. 
+While we cannot anticipate all needs in advance, we turn to the the grade-level process questions for determining a role vocabulary.
+Our prior work showed that general purpose semantic roles, and a handful of domain-specific 
+roles provide effective coverage for a majority of the recognition questions. 
+We will extend these with roles from existing resources such as FrameNet and PropBank to construct a comprehensive role vocabulary.
+
+%{\bf What are the roles to use? Adopt PropBank roles but define it for the process -- not at the verb level.}
+Table~\ref{tab:roles} lists a standard list of semantic roles~\cite{}. These roles are typically defined with respect to a predicate, most often a verb.
+However, there is substantial variability in discourse reflecting the diversity in situations involving the same processes. 
+Consider the following sentences:
+\begin{itemize}
+\item When water evaporates it changes to water vapor. 
+\item The process by which water from the oceans rises into the atmosphere as water vapor. 
+\end{itemize}
+
+Both sentences describe instances of the process of evaporation. 
+With respect to the corresponding predicates, Water vapor is the {\em Goal} in the first sentence, but is a {\em Patient} in the second. 
+However, both are essentially the {\em Result} of the process evaporation. 
+
+This fragmentation is problematic for both interpreting situations and for drawing inferences about them. 
+To avoid these problems we propose to define the roles with respect to a canonical description of the process. 
+Further we aim to assemble sentences that express information in expected ways, thus allowing us 
+flexibility in determining canonical lexical realizations.
+%As we will detail in the next section, we aim to assemble sentences that express information in expected ways 
+%thereby addressing the difficulties of dealing with sentences that express information in non-canonical ways. 
+
+\begin{table}[htdp]
+\caption{Semantic Role Vocabulary}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+agent & Causal agent of an event.\\
+instrument & The object used to accomplish the goal.\\
+cause & Event or Agent that causes the event to happen.\\
+experiencer & The entity undergoing the event. \\
+recipient & The benefactor of the process outcome.\\
+path & The path through which the process happens.\\
+location & The place where the process happens.\\
+measure & A quantity associated with the process.\\
+theme & A process entity that doesn't undergo any change.\\
+\hline
+
+\end{tabular}
+\end{center}
+\label{tab:roles}
+\end{table}%
+
+%{\bf Why is discovering necessary?}
+Manual assignment of roles for every process is not scalable. 
+Instead we propose to automatically determine the applicable subset of roles from this vocabulary. 
+%Our key idea is that some subset of roles can be identified with higher precision than others. 
+%For instance roles such as {\em cause} and {\em result} have highly regular lexical realizations.
+%{\bf What is the method for discovering?}
+%{\bf Why will this work?}
+%{\bf What work exists? How does this relate to x?}

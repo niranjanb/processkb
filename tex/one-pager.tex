@@ -1,0 +1,51 @@
+%!TEX root = summary-only.tex
+%Knowledge extraction and reasoning are two central pursuits for AI. 
+Knowledge-intensive benchmarks including standardized grade-level science exams~\cite{clark2015elementary}, 
+textual entailment~\cite{dagan2010recognizing}, and reading comprehension tasks~\cite{richardson2013mctest} have renewed interests in automatic knowledge extraction and reasoning. 
+These tasks motivate reasoning-based systems that go beyond simple retrieval and syntactic structure matching~\cite{clark2014:akbc,chb2013:akbc, khot2015:emlnlp}. 
+
+Effective semantic representations of relevant information is critical for making significant advances in building such systems. 
+Semantic role-based representations have shown promise for open-domain factoid question answering~\cite{shen2007using, pizzato2008indexing}. 
+Some of the knowledge required for grade-level science exams are naturally expressed via semantic roles.
+Consider the following example from an actual 4th grade science exam.
+
+{\em When plants use stored sugar for energy, they go through a process called \\
+(A) photosynthesis (B) transpiration (C) respiration (D) perspiration.}\\
+
+{\em Photosynthesis} and {\em respiration} both involve sugar and energy. 
+Photosynthesis converts light energy to sugar, whereas (cellular) respiration releases energy in the sugar by breaking it down. 
+Not surprisingly these processes are described using similar words, which makes bag-of-words style reasoning unreliable. 
+Understanding the different roles that energy and sugar play in these processes is key to effective reasoning.
+Such semantic roles are critical for performing chained automated reasoning. 
+
+Several existing resources provide semantic representations of general open-domain actions e.g., FrameNet, PropBank, and VerbNet. 
+However, these resources do not adequately cover many of the scientific processes. 
+FrameNet, for instance, does not have entries for nearly half of the processes described in 4th grade science exams. 
+The coverage is likely to be worse for higher grade levels.
+
+We propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
+The central idea is to automatically compose a semantic representation using a pre-determined vocabulary of semantic roles. 
+Having identified the roles of interest, we will seek out sentences that express these roles and build extractors for these roles via bootstrapping.
+%\footnote{We call these extractors rather than semantic parsers, since the goal here is to build knowledge about these processes and  not necessarily to build a parser that can reliably identify {\em all} semantic roles expressed in a sentence.} 
+We will conduct intrinsic and external evaluations. 
+We will create a manual target representation for intrinsic evaluation, and use the 4th grade science questions as an external application.
+
+{\bf Intellectual Merit} 
+
+This work investigates a new direction in acquiring semantic roles by targeting sentences that express information in expected ways.
+The primary contribution of this work will include development of joint alignment and collective labeling mechanisms for semantic role labeling.
+A secondary contribution is the development of methods for automatically identifying roles that apply for a given process. 
+The advances will result in new ways to leverage unlabeled data and balance representational needs and extraction capabilities.
+
+{\bf Broader Impact}
+
+Automatic knowledge extraction is fundamental to advancing Artificial Intelligence. 
+This work contributes towards building systems capable of understanding knowledge in texts and reason with them.
+Better reasoning systems help information access and reduce information overload thereby accelerating research and discovery, 
+as well as serve the information needs of the population at large.
+
+{\bf Keywords} Knowledge extraction, Information extraction, Event extraction, Summarization
+
+
+% -- In order to scale, we will investigate methods for automatically determining which roles are applicable for a particular process. Prior works have either relied on fully supervised training data to specify roles~\cite{} or have relied on clustering of syntactic functions to automatically induce roles~\cite{}. We propose an intermediary solution that aims to determine which set of roles (from a pre-specified role vocabulary) applies to the process. The intuition is that there are some general purpose notions such as {\em direction}, {\em medium}, {\em change} etc that are common to many processes.
+%	
