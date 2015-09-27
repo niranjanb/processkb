@@ -74,10 +74,12 @@ and the result of conduction is that the other object also becomes {\em hot}.
 These bits of information are naturally encoded as semantic roles.
 
 Existing lexical semantic resources and knowledge bases are not well suited for our goals.
+
 On the one hand, existing semantic resources such as FrameNet and PropBank provide different representations of 
 general open-domain actions but do not cover knowledge about scientific processes. 
 FrameNet, for instance, does not have entries for nearly half of the processes described in 4th grade science exams. 
-The coverage is likely worse for higher grade levels. On the other hand, automatic knowledge bases built via relation extraction
+The coverage is likely worse for higher grade levels. 
+On the other hand, automatic knowledge bases built via relation extraction
 capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
 
 
@@ -85,20 +87,20 @@ capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
 We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand.
-While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
-Furthermore prior work on ProbBank style role labeling largely focused on a predicate centric view,
- which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
-Our goal is to construct abstractions that are at the level of the process to enable effective reasoning.
+%While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
+%ProbBank style role labeling largely focused on a predicate centric view, which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
+%Our goal is to construct process level abstractions to reduce burden during reasoning, which is closer to a FrameNet style abstraction.
+%Pre-specifying frames requires expert labor and is not scalable.
 
 {\bf We propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
 This is similar to frame centric abstraction used by FrameNet. The key difference is that roles are still thematic but are defined with respect to a canonical predicate.
-This additional level of abstraction during knowledge construction reduces burden on reasoning by eliminating the need to establish equivalences 
-between effectively equivalent bits of information expressed in different ways.
+Canonicalization during construction reduces reasoning burden by eliminating steps that establish equivalences 
+between effectively equivalent bits of information realized via different predicates.
 
-Existing resources are inadqeuate. FrameNet does not cover the concepts of interest. 
-The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
-General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
+%General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
 Handling the variations requires learning from large amounts of training data, which is laborious and requires expert labor.
+Also mentioned above, existing resources cannot be directly used. FrameNet does not cover the concepts of interest. 
+The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 Rather than building a role labeler that can work on any sentence, we adopt a simpler approach that works well on a smaller subset of sentences.
 
 {\bf The main idea behind the proposal is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
@@ -107,6 +109,8 @@ Using a set of manually constructed query patterns we find sentences which conve
 For instance "<process name> causes <x>" is a simple pattern that can be used to find the {\em result} role for a process. 
 This strong expectation for how arguments are realized allows us to turn SRL into a simpler task of assessing the confidence on the extraction using features that generalize better across different processes.  
 This allows us to substantially reduces the burden of annotating sentences for each process.
+Even though PropBank and FrameNet data are not directly usable, the predicate-based roles, and the frame structures provide evidence for composing our target semantic roles. 
+We propose to exploit these features to build a local sentence-level extractor.
 
 Despite the targeted acquisition, local sentence-level extraction alone is not adequate, because not all lexico-syntactic patterns are unambiguous. 
 For example, "evaporates into <x>" extracts steam, a {\em result}, as well as atmosphere, a {\em location}. 
