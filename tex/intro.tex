@@ -80,14 +80,18 @@ FrameNet, for instance, does not have entries for nearly half of the processes d
 The coverage is likely worse for higher grade levels. On the other hand, automatic knowledge bases built via relation extraction
 capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
 
-In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-
-We compose a semantic representation using a pre-determined vocabulary of semantic roles. 
-Different from PropBank, which espouses a predicate centric view, we propose that the roles be identified with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.
-However, this canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 
 \subsection{Proposal}
 
+In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
+We compose a semantic representation using a pre-determined vocabulary of semantic roles similar to the thematic roles used in PropBank.
+PropBank espouses a predicate centric view which is appropriate for reasoning about general purpose actions (e.g., change, get, give).
+
+{\bf Instead we propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
+This additional level of abstraction during knowledge construction reduces burden on reasoning by eliminating the need to establish equivalences 
+between effectively equivalent bits of information expressed in different ways.
+
+However, this canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
 Rather we propose a simpler approach that can avoid handling challenging sentences.
 
@@ -120,10 +124,10 @@ The generated knowledge base will be evaluated for intrinsic quality and externa
 
 Upon successful completion this project would have made the following contributions:
 \begin{itemize}
+\item Release of a knowledge base covering semantic representations of processes for grade level science.
 \item Methods for automatically gathering high quality sentences that cover a target set of roles. 
 \item A joint inference method that reconciles roles across different sentences.  
 \item Methods for automatically assessing the applicability, coverage and importance of roles with respect to a target process.
-\item Release of the knowledge base covering semantic representations of processes for grade level science.
 \end{itemize}
 
  
