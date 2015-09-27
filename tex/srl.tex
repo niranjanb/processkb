@@ -154,12 +154,22 @@ To account for these differences we consider two extensions. Use different sets 
 Inference yields a set of roles that can be reliably identified from the input set of sentences. 
 The knowledge thus gathered is limited by the query patterns that we used to retrieve the sentences in the first place. To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles. 
 
+\subsection{Aggregation}
 First, given the current state of the knowledge base and newly inferred roles we devise a simple aggregation procedure that consolidates the roles -- resolving any inconsistencies between the different iterations\footnote{
 It is possible to infer new roles with respect to the KB at each iteration, it can introduce many variables 
 in inference and render it inefficient.
 }.
 
-Next, we inspect the KB to identify roles that need to be filled, and pass them on to the sentence gathering components for expansion.
+\subsection{Assessment}
+
+We inspect the KB to identify roles that apply for a specific process based on the confidences of the inferred roles. 
+Note that we do not make any assumptions a priori about what roles apply to a process. 
+Further not all roles maybe covered by the roles vocabulary. For example, ....
+We identify regular syntactic signatures that are not classified into existing roles and use them to derive new knowledge.
+
+
+need to be filled, and pass them on to the sentence gathering components for expansion.
+
 
 %instantiate new patterns to identify better sentences. The idea is to evaluate lexical alternatives that can form better queries to identify sentences. For example, sentences describing instances of conduction of heat are better found by adding {\em heat}. This type of query expansion using pseudo-relevance feedback is a well studied technique in information retrieval. We consider a restricted version of this problem, where are looking to instantiate existing query templates. 
 

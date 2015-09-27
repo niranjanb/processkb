@@ -15,31 +15,49 @@
 \newpage
 }
 \section{Introduction}
-
-Our vision is to acquire knowledge that can be used to effectively reason about scenarios and situations using scientific knowledge.
-In particular, we propose to build a semantic-role based knowledge base of scientific concepts involving simple physical, chemical, and other natural phenomena. Standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary} motivate automatic knowledge extraction and reasoning~\cite{clark2014:akbc,chb2013:akbc, khot2015:emlnlp}. 
-Effective semantic representations of the relevant knowledge is critical for making significant advances in building such systems. 
-
-%In this proposal we focus on extracting knowledge about physical, chemical, biological processes and other natural phenomena. 
-%We propose a semantic-role based representation that effectively supports reasoning for answering grade-level questions on processes.
-%Our proposal includes investigation of new methods for acquiring the typical semantic roles for processes, and methods for interpreting the roles mentioned in a sentence using the acquired knowledge.
-
-%Our preliminary work on a set of 150 process recognition questions shows that semantic roles provide critical information for answering a majority of the questions~\cite{louvan2015:kcap}. 
+\eat{
 Question answering and knowledge extraction research has focused on extracting and reasoning with simple facts expressible as binary relations.
 Open-domain QA and factoid question answering on the web has driven much of this research. 
 In contrast grade-level science exams go beyond retrieval abilities and test understanding and use of knowledge to reason about specific scenarios~\cite{clark2014:akbc}.
-The knowledge-requirements span a wide range including the ability to recognize a scenario and map elements of the scenario to known processes or phenomena. We refer to this as process recognition. Consider the following examples from an actual 4th grade science exam.
 
+% in a form that is effective for reasoning a
+% ability to recognize a scenario and map elements of the scenario to known scientific processes or phenomena. 
+%We refer to this as process recognition.
+%We propose automatic acquisition of semantic-role based knowledge base of simple physical, chemical, and other natural phenomena. 
+% Our vision is to acquire knowledge that can be used to effectively reason about scenarios and situations using scientific knowledge.
+
+
+}
+
+
+Our vision is to build a large scale knowledge base that can be used to support reasoning-based approaches for tasks such as question answering. 
+In particular we focus on knowledge acquisition for standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary}.  Our prior work on these tasks provide strong motivation for reasoning based approaches~\cite{clark2014:akbc,chb2013:akbc}.
+However, developing reasoning based approaches using shallow representations is extremely difficult even when using state-of-the-art probabilistic methods~\cite{khot2015:emlnlp}. 
+
+In this work we propose to investigate methods to acquire knowledge about physical, chemical, and other natural phenomena.
+The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. 
+Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to any other task and domain.
+
+\subsection{Motivation}
+We motivate the need for a semantic-role based representation using two examples from 4$^{th}$ grade science exams. These questions test the ability to recognize a process based on the description of a scenario. \\
+\begin{center}
+\framebox{
+\begin{minipage}{36em}
 \begin{enumerate}
-\item {\em When plants use stored sugar for energy, they go through a process called \\
-(A) photosynthesis (B) transpiration (C) respiration (D) perspiration.}
-\item {\em A pot is heated on a stove. Which process causes the metal handle of the pot to also become hot? \\
-(A) Conduction (B) Convection (C) Radiation (D) Combustion}. \\
+	\item {\em When plants use stored sugar for energy, they go through a process called\\
+	(A) photosynthesis (B) transpiration (C) respiration (D) perspiration.}\\
+	
+	\item {\em A pot is heated on a stove. What causes the metal handle of the pot to become hot? \\
+	(A) Conduction (B) Convection (C) Radiation (D) Combustion}. \\
 \end{enumerate}
 
-%The knowledge necessary for this task is naturally expressed via simple semantic roles. 
-These questions test the ability to recognize a process based on the description of a scenario. 
+\end{minipage}
 
+}
+\\
+\end{center}
+
+%The knowledge necessary for this task is naturally expressed via simple semantic roles. 
 The first question tests knowledge about biological processes.
 {\em Photosynthesis} and {\em respiration} both involve sugar and energy. 
 Photosynthesis converts light energy to sugar, whereas (cellular) respiration releases energy in the sugar by breaking it down. 
@@ -55,81 +73,66 @@ Specifically the knowledge about conduction should convey that there are two ent
 and the result of conduction is that the other object also becomes {\em hot}. 
 These bits of information are naturally encoded as semantic roles.
 
-%To this end, the reasoner must first assemble a representation of the key bits of the information:
-%1) The thing being heated, the {\em undergoer}, is the pot. 
-%2) The  {\em result} is that the pot handle becomes hot.
-%The next step is to verify if the result in the scenario is plausible given the following bits of knowledge about heating and conduction processes:
-%1) The result of heating is that the thing being heated (the pot) becomes hot.
-
-%Further, to perform effective reasoning a system must chain together few pieces of information some of which has to be inferred:
-%1) The {\em result} of heating is that the pot becomes hot. 
-%2) In a conduction process heat is transferred via direct contact.
-%3) The handle is part of the pot and is thus in direct contact with the pot. 
-%Most of these bits of information are naturally expressed via semantic roles of {\em heating} and {\em conduction}.
-%e.g., {\em undergoer} = pot handle, {\em action} = heat transfer, {\em medium} = direct contact via part-of(pot handle, pot).
-%Note that bits 1 and 2 are background knowledge and are not explicitly stated in the question. 
-%To apply these background knowledge we must be able to identify {\em what is being heated} and {\em what has become hot} in the scenario.
-
-Existing knowledge bases and lexical semantic resources are inadequate.
+Existing lexical semantic resources and knowledge bases are not well suited for our goals.
 On the one hand, existing semantic resources such as FrameNet and PropBank provide different representations of 
 general open-domain actions but do not cover knowledge about scientific processes. 
 FrameNet, for instance, does not have entries for nearly half of the processes described in 4th grade science exams. 
 The coverage is likely worse for higher grade levels. On the other hand, automatic knowledge bases built via relation extraction
 capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
 
-
-
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-The central idea is to automatically compose a semantic representation using a pre-determined vocabulary of semantic roles. 
-Having identified the roles of interest, we will seek out sentences that express these roles and build extractors for these roles via bootstrapping.
-\footnote{
-We call these extractors rather than semantic parsers, since the goal here is to build knowledge about these processes and 
-not necessarily to build a parser that can reliably identify {\em all} semantic roles expressed in a sentence.} 
-We will conduct intrinsic and external evaluations. 
-We will create a manual target representation for intrinsic evaluation, and use the 4th grade science questions as an external application.
-The proposed work has three major research components:
 
-\subsection{Representation -- Discovering Roles}
+We compose a semantic representation using a pre-determined vocabulary of semantic roles. 
+Different from PropBank, which espouses a predicate centric view, we propose that the roles be identified with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.
+However, this canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
+General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
+Rather we propose a simpler approach that can avoid handling challenging sentences.
 
-Our central premise is that the entities involved in a process and the roles they play provide a powerful representation for reasoning and QA. 
-Similar representations have been shown to be useful for Open-domain factoid question answering~\cite{shen2007using,pizzato2008indexing}, 
-and reading comprehension tasks on process descriptions~\cite{berantSrikumar14}.
+\subsection{Proposal}
 
-As preliminary work, we first analyzed the knowledge requirements for a set of questions targeting around 150 processes. 
-While a small collection of general purpose roles (e.g., Undergoer, Result, Enabler, Trigger) capture the key semantic elements for a 
-majority of the processes~\cite{louvan2015:kcap}, we also find that a set of domain specific roles (e.g., Direction, Medium, Physical\_Property, Chemical\_Property) are also critical. We propose to compose a representation that combines both general and domain specific roles. 
+{\em The main idea behind the proposal is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
+Leveraging the vastness of the web greatly reduces the need to accurately identify roles in difficult to process sentences.
+Using carefully constructed query patterns we find sentences which convey the roles using expected lexico-syntactic constructs. 
+For instance "<process name> causes <x>" is a simple pattern that can be used to find the {\em result} role for a process. 
+This strong expectation for how arguments are realized allows us  to turn SRL into a simpler task of assessing the confidence on the extraction using features that generalize better across different processes.  This substantially reduces the burden of annotating sentences for each process.
+Because our goal is to acquire knowledge about a process, this setting also allows us to perform joint inference over multiple sentences. 
+We build on prior work in ILP-based semi-supervised and unsupervised induction approaches. 
+As part of the targeted acquisition we also develop simple information retrieval based feedback methods for ensuring that the different roles are covered and the roles that are a
 
-Note that these roles are specified based on a canonical view of the process. One of the key challenges in question answering is in overcoming the variability of expression. Labeling with respect to a canonicalized view of the process is a deliberate attempt at addressing the variability problem. 
-%while guarding against fragmented frame specific elements that hinder extraction/interpretation into frame semantics~\cite{???}. 
+The generated knowledge base will be evaluated for intrinsic quality and external utility. For internal evaluations we will perform manual evaluation of the resulting KB. As part of the evaluation, we will also create a large scale curated KB, which relies on correcting the outputs from the system, rather than careful annotation of each sentence. We will also generate a gold standard of the desired roles and role fillers for evaluating coverage. As an external evaluation we will use the knowledge base for answering process recognition questions. All the resources and evaluation test beds will be shared with the research community for further research.
+	
 
-%Table below shows some examples.
-%\begin{table}[htdp]
-%\caption{default}
-%\begin{center}
-%\begin{tabular}{|l|l|l|l|}
-%
-%\end{tabular}
-%\end{center}
-%\label{default}
-%\end{table}%
+\subsection{Contributions}
 
-Manually specifying roles for each process is not desirable from a scalability standpoint.
-We will investigate scalable methods for automatically identifying the appropriate roles for a process. 
-Lexical and syntactic cues are indicative of certain roles in sentences. 
-For example a {\em [process] happens by [event]} pattern suggests the presence of a manner role, and the presence of locative prepositions can indicate location or orientation roles. 
-Note that the goal of this step is to simply assess whether a particular role applies to the process frame and not to accurately determine the role filler itself.~\footnote{
-Many cues are frame specific and using them in general for all frames can be problematic. 
-However, the goal here is to be inclusive and determine which roles apply. 
-It may be possible to over generate the frame with many plausible roles in this stage and prune it down in the next step if finding role fillers fails.} 
-Furthermore, by aggregating these cues over large number of sentences, we can make reliable assessments about the importance of certain roles.~\footnote{
-Some roles might be left implicit as common sense knowledge. 
-Those remain beyond the scope of this work.} 
+Upon successful completion this project would have made the following contributions:
+\begin{itemize}
+\item Methods for automatically gathering high quality sentences that cover a target set of roles. 
+\item A joint inference method that reconciles roles across different sentences.  
+\item Methods for automatically assessing the applicability, coverage and importance of roles with respect to a target process.
+\item Release of the knowledge base covering semantic representations of processes for grade level science.
+\end{itemize}
 
-\subsection{Knowledge Extraction -- Acquiring Role Fillers}
+ 
+
+
+%The central idea is to automatically compose a semantic representation using a pre-determined vocabulary of semantic roles. 
+%Having identified the roles of interest, we will seek out sentences that express these roles and build extractors for these roles via bootstrapping.
+%\footnote{
+%We call these extractors rather than semantic parsers, since the goal here is to build knowledge about these processes and 
+%not necessarily to build a parser that can reliably identify {\em all} semantic roles expressed in a sentence.} 
+
+%We will conduct intrinsic and external evaluations. 
+%We will create a manual target representation for intrinsic evaluation, and use the 4th grade science questions as an external application.
+%The proposed work has three major research components:
+
+\section{Background and Preliminary Work}
 
 Much of SRL work has focused on interpreting sentences i.e., identifying roles expressed in a sentence.
-Our goal is different. We seek to acquire knowledge about processes and represent them in terms of semantic roles.
-Prior work on SRL techniques have largely relied on supervised learning techniques for learning to identify roles~\cite{}.
+Our goal is different. 
+We seek to acquire knowledge about processes and represent them in terms of semantic roles.
+SRL is a challenging structure prediction task which often requires 
+
+Prior work either resorted to supervised learning techniques or to semi-supervised approaches 
 However, obtaining training data is often difficult and laborious, especially for complex tasks such as SRL.
 Several prior approaches have used semi-supervised learning (SSL) approaches to address this issue. 
 
@@ -137,14 +140,43 @@ We propose a different approach, where we explicitly find sentences that express
 This allows us greater flexibility in choosing which sentences to use (we can maximize role coverage, diversity of instances etc.).
 Aligning the various spans within these sentences allows us to do collective labeling (similar in spirit to transduction learning).
 
+
+Our central premise is that the entities involved in a process and the roles they play provide a powerful representation for reasoning and QA. 
+Similar representations have been shown to be useful for Open-domain factoid question answering~\cite{shen2007using,pizzato2008indexing}, 
+and reading comprehension tasks on process descriptions~\cite{berantSrikumar14}.
+
+
+\subsection{Preliminary Work}
+
+As preliminary work, we first analyzed the knowledge requirements for a set of questions targeting around 150 processes. 
+While a small collection of general purpose roles (e.g., Undergoer, Result, Enabler, Trigger) capture the key semantic elements for a 
+majority of the processes~\cite{louvan2015:kcap}, we also find that a set of domain specific roles (e.g., Direction, Medium, Physical\_Property, Chemical\_Property) are also critical. We propose to compose a representation that combines both general and domain specific roles. 
+
+Note that these roles are specified based on a canonical view of the process. One of the key challenges in question answering is in overcoming the variability of expression. Labeling with respect to a canonicalized view of the process is a deliberate attempt at addressing the variability problem. 
+
+Manually specifying roles for each process is not desirable from a scalability standpoint.
+%We will investigate scalable methods for automatically identifying the appropriate roles for a process. 
+Lexical and syntactic cues are indicative of certain roles in sentences. 
+For example a {\em [process] happens by [event]} pattern suggests the presence of a manner role, and the presence of locative prepositions can indicate location or orientation roles. 
+%Note that the goal of this step is to simply assess whether a particular role applies to the process frame and not to accurately determine the role filler itself.~\footnote{
+%Many cues are frame specific and using them in general for all frames can be problematic. 
+%However, the goal here is to be inclusive and determine which roles apply. 
+%It may be possible to over generate the frame with many plausible roles in this stage and prune it down in the next step if finding role fillers fails.} 
+%Furthermore, by aggregating these cues over large number of sentences, we can make reliable assessments about the importance of certain roles.~\footnote{
+%Some roles might be left implicit as common sense knowledge. 
+%Those remain beyond the scope of this work.} 
+
+%\subsection{Knowledge Extraction}
+
+
 %\subsection{Semantic Interpretation -- Parsing Questions using Acquired Knowledge}
 %Developing a semantic parser for questions based on the acquired knowledge -- [Technical contribution here...]
 
 
-\subsection{Summary}
+\eat{\subsection{Summary}
 
 We propose to develop methods for composing semantic role knowledge about processes. Successful completion of the work will result in the following contributions:
 \begin{itemize}
 \item Knowledge Representation -- Method for automatically determining roles that apply for a target concept. This is distinct from existing work which either assumes that the roles are fully pre-specified or are induced fully automatically. Our proposal occupies a middle-ground that leverages cues 
-\end{itemize}
+\end{itemize}}
 %
