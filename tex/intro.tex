@@ -84,16 +84,22 @@ capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain
 \subsection{Proposal}
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-We compose a semantic representation using a pre-determined vocabulary of semantic roles similar to the thematic roles used in PropBank.
-PropBank espouses a predicate centric view which is appropriate for reasoning about general purpose actions (e.g., change, get, give).
+We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand.
+While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
+Furthermore prior work on ProbBank style role labeling largely focused on a predicate centric view,
+ which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
+Our goal is to construct abstractions that are at the level of the process to enable effective reasoning.
 
-{\bf Instead we propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
+{\bf We propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
+This is similar to frame centric abstraction used by FrameNet. The key difference is that roles are still thematic but are defined with respect to a canonical predicate.
 This additional level of abstraction during knowledge construction reduces burden on reasoning by eliminating the need to establish equivalences 
 between effectively equivalent bits of information expressed in different ways.
 
-However, this canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
+Existing resources are inadqeuate. FrameNet does not cover the concepts of interest. 
+The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
-Rather we propose a simpler approach that can avoid handling challenging sentences.
+Handling the variations requires learning from large amounts of training data, which is laborious and requires expert labor.
+Rather than building a role labeler that can work on any sentence, we adopt a simpler approach that works well on a smaller subset of sentences.
 
 {\bf The main idea behind the proposal is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
 Leveraging the vastness of the web greatly reduces the need to accurately identify roles in difficult to process sentences.
