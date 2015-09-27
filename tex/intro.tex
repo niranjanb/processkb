@@ -31,12 +31,12 @@ In contrast grade-level science exams go beyond retrieval abilities and test und
 
 Our vision is targeted acquisition of inference-supporting knowledge that can be used for reasoning tasks such as Question Answering (QA).
 In particular we focus on knowledge acquisition for standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary}.  Our prior work on these tasks provide strong motivation for reasoning based approaches~\cite{clark2014:akbc,chb2013:akbc}.
-However, reasoning with shallow text-derived representations is extremely difficult even when using state-of-the-art probabilistic methods~\cite{khot2015:emlnlp}. 
-Creating effective semantic representations of knowledge is critical.
+Lexical and syntactic variations render shallow text-derived knowledge ineffective for reasoning, even when using state-of-the-art probabilistic methods~\cite{khot2015:emlnlp}. 
+Deeper semantic representations are critical for effective reasoning.
 
-In this work we propose to investigate methods to acquire knowledge about physical, chemical, and other natural phenomena.
-The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. 
-Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to any other task and domain.
+This proposal investigates methods for acquiring knowledge about physical, chemical, and other natural phenomena.
+The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. We refer to this as process knowledge. 
+Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to other tasks and domains.
 
 \subsection{Motivation}
 We motivate the need for a semantic-role based representation using two examples from 4$^{th}$ grade science exams. These questions test the ability to recognize a process based on the description of a scenario. \\
@@ -115,22 +115,23 @@ We propose to exploit these features to build a local sentence-level extractor.
 Despite the targeted acquisition, local sentence-level extraction alone is not adequate, because not all lexico-syntactic patterns are unambiguous. 
 For example, "evaporates into <x>" extracts steam, a {\em result}, as well as atmosphere, a {\em location}. 
 
-{\bf A second key idea in this proposal is to perform joint inference over multiple sentences to avoid errors in the local extraction}.
+{\bf A second key idea is to perform joint inference over multiple sentences to avoid errors in the local extraction}.
 Because our goal is to acquire knowledge about a process, we turn the variety of expression on the web to our advantage. 
 We build on prior work in Integer Linear Program (ILP) based semi-supervised and unsupervised induction approaches. 
 The ILP attempts to find an assignment of roles that maximizes the sum of extraction confidences, 
 while also minimizing disagreements in labels for similar text spans in similar sentences.
 
-We begin with a set of general purpose roles, {\em a priori} we don't assume which roles are applicable to each process as this manual assignment is not desirable from a scalability standpoint.
+While we start with a set of general purpose roles, {\em a priori} we don't assume which roles are applicable to each process as this manual assignment is not desirable from a scalability standpoint.
 Also not all critical information may be covered by the set of roles that hand.
 
-{\bf A third contribution of the proposal is to investigate post-hoc assessment methods that identify which roles apply and to discover new roles not mentioned in the vocabulary.}
-As part of the targeted acquisition we also develop simple information retrieval based feedback methods for ensuring that the different roles are covered and the roles that are...
+{\bf A third contribution includes methods that identify the subset of roles that apply to a process and discover new roles not part of the general vocabulary}. 
+As part of the targeted acquisition, we propose an iterative approach with methods to i) assess the coverage of the roles, ii) induce new roles by identifying consistently repeated arguments that don't fit existing roles, and iii) relevance feedback based query pattern generation to expand the knowledge.
 
 The generated knowledge base will be evaluated for intrinsic quality and external utility. For internal evaluations we will perform manual evaluation of the resulting KB. As part of the evaluation, we will also create a large scale curated KB, which relies on correcting the outputs from the system, rather than careful annotation of each sentence. We will also generate a gold standard of the desired roles and role fillers for evaluating coverage. As an external evaluation we will use the knowledge base for answering process recognition questions. All the resources and evaluation test beds will be shared with the research community for further research.
-	
 
-\subsection{Contributions}
+\subsection{Prior Work and Contributions}
+
+The motivation and direction for this proposal stems directly from our prior work on grade science exams.  Our earlier work studied knowledge requirements~\cite{chb2013:akbc}, developed inference-supporting rule knowledge bases~\cite{clark2014:akbc}, and investigated sophisticated state-of-the-art probabilistic reasoning methods for QA~\cite{khot2015:emlnlp}. Our ongoing preliminary work investigated the value of a handful of semantic roles in answering process recognition questions and identified the knowledge, representation, and reasoning gaps~\cite{louvan2015:kcap}. This proposal aims to address the central challenges that we've identified through these prior works.
 
 Upon successful completion this project would have made the following contributions:
 \begin{itemize}
