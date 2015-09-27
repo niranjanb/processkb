@@ -16,14 +16,16 @@
 }
 \section{Introduction}
 
-Standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary} motivate automatic knowledge extraction and reasoning~\cite{clark2014:akbc,chb2013:akbc, khot2015:emlnlp}. 
+Our vision is to acquire knowledge that can be used to effectively reason about scenarios and situations using scientific knowledge.
+In particular, we propose to build a semantic-role based knowledge base of scientific concepts involving simple physical, chemical, and other natural phenomena. Standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary} motivate automatic knowledge extraction and reasoning~\cite{clark2014:akbc,chb2013:akbc, khot2015:emlnlp}. 
 Effective semantic representations of the relevant knowledge is critical for making significant advances in building such systems. 
-In this proposal we focus on extracting knowledge about physical, chemical, biological processes and other natural phenomena. 
-We propose a semantic-role based representation that effectively supports reasoning for answering grade-level questions on processes.
-Our proposal includes investigation of new methods for acquiring the typical semantic roles for processes, and methods for interpreting the roles mentioned in a sentence using the acquired knowledge.
+
+%In this proposal we focus on extracting knowledge about physical, chemical, biological processes and other natural phenomena. 
+%We propose a semantic-role based representation that effectively supports reasoning for answering grade-level questions on processes.
+%Our proposal includes investigation of new methods for acquiring the typical semantic roles for processes, and methods for interpreting the roles mentioned in a sentence using the acquired knowledge.
 
 %Our preliminary work on a set of 150 process recognition questions shows that semantic roles provide critical information for answering a majority of the questions~\cite{louvan2015:kcap}. 
-Much of question answering and knowledge extraction research has focused on extracting and reasoning with simple facts. 
+Question answering and knowledge extraction research has focused on extracting and reasoning with simple facts expressible as binary relations.
 Open-domain QA and factoid question answering on the web has driven much of this research. 
 In contrast grade-level science exams go beyond retrieval abilities and test understanding and use of knowledge to reason about specific scenarios~\cite{clark2014:akbc}.
 The knowledge-requirements span a wide range including the ability to recognize a scenario and map elements of the scenario to known processes or phenomena. We refer to this as process recognition. Consider the following examples from an actual 4th grade science exam.
@@ -45,27 +47,37 @@ Not surprisingly these processes are described using similar words, which makes 
 Understanding the different roles that energy and sugar play in these processes, and knowledge of the main actions involved is key to effective reasoning.
 
 The second question tests knowledge about heat transfer mechanisms.
-The notion of {\em medium} is critical for answering this question.
-To perform effective reasoning a system must chain together few pieces of information:
-1) The result of heating is that the pot becomes hot. 
-2) The pot handle is part of the pot and is thus in direct contact with the pot. 
-3) In a conduction process heat is transferred via direct contact.
-Most of these bits of information are naturally expressed via semantic roles of {\em heating} and {\em conduction}.
-e.g., {\em undergoer} = pot handle, {\em action} = heat transfer, {\em medium} = direct contact via part-of(pot handle, pot).
-Note that bits 1 and 2 are background knowledge and are not explicitly stated in the question. 
-To apply these background knowledge we must be able to identify {\em what is being heated} and {\em what has become hot}
-in the scenario.
+To establish that conduction is the cause, a reasoning system must establish that there is some heat transfer happening through {\em direct contact}. 
+We envision a reasoning system that first interprets the input scenario in terms of entities and their semantic roles. 
+In this case, the system would first identify {\em what is being heated} (the pot), and {\em what is the purported result} of the heating (the pot handle). 
+Then, it will verify if this interpretation of the actions and the roles match with the expected actions and roles of a conduction process. 
+Specifically the knowledge about conduction should convey that there are two entities that are in direct contact, one of which is being heated or is hot, 
+and the result of conduction is that the other object also becomes {\em hot}. 
+These bits of information are naturally encoded as semantic roles.
 
+%To this end, the reasoner must first assemble a representation of the key bits of the information:
+%1) The thing being heated, the {\em undergoer}, is the pot. 
+%2) The  {\em result} is that the pot handle becomes hot.
+%The next step is to verify if the result in the scenario is plausible given the following bits of knowledge about heating and conduction processes:
+%1) The result of heating is that the thing being heated (the pot) becomes hot.
 
-%Further, the chain has to combine this information with the fact that the pot handle is part of the pot, 
-%which is likely the medium through which the heat was conducted. 
-%Semantic representations are critical for this type of chained automated reasoning. 
+%Further, to perform effective reasoning a system must chain together few pieces of information some of which has to be inferred:
+%1) The {\em result} of heating is that the pot becomes hot. 
+%2) In a conduction process heat is transferred via direct contact.
+%3) The handle is part of the pot and is thus in direct contact with the pot. 
+%Most of these bits of information are naturally expressed via semantic roles of {\em heating} and {\em conduction}.
+%e.g., {\em undergoer} = pot handle, {\em action} = heat transfer, {\em medium} = direct contact via part-of(pot handle, pot).
+%Note that bits 1 and 2 are background knowledge and are not explicitly stated in the question. 
+%To apply these background knowledge we must be able to identify {\em what is being heated} and {\em what has become hot} in the scenario.
 
+Existing knowledge bases and lexical semantic resources are inadequate.
 On the one hand, existing semantic resources such as FrameNet and PropBank provide different representations of 
 general open-domain actions but do not cover knowledge about scientific processes. 
 FrameNet, for instance, does not have entries for nearly half of the processes described in 4th grade science exams. 
 The coverage is likely worse for higher grade levels. On the other hand, automatic knowledge bases built via relation extraction
 capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
+
+
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
 The central idea is to automatically compose a semantic representation using a pre-determined vocabulary of semantic roles. 
