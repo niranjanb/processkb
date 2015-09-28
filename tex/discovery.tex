@@ -6,28 +6,47 @@ The yield is limited by the set of roles and the query patterns used to retrieve
 
 {\bf Assessment}
 
-To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles
-to find new query patterns. We propose to build a confidence function that assesses the coverage
-of roles for each process.
+To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles to find new query patterns. 
+Traditional bootstrapping methods coupled with query expansion techniques from information retrieval 
+can be exploited to instantiate query templates with new patterns derived from the retrieved sentences. 
+The new query patterns are then used to repeat the entire procedure to derive new fillers. 
 
+The iterative procedure however can yield role fillers that are inconsistent with roles obtained from previous iterations.
+While it is possible to infer new roles jointly with the current KB at each iteration, it can introduce too many variables in inference and render it inefficient.
+Therefore, we propose a simple aggregation procedure that consolidates the roles by effectively resolving any inconsistencies between the different iterations.
+%Last we will also explore methods that automatically assesses the generated knowledge in terms of coverage and quality
 
 {\bf Role Discovery}
 
+At each iteration we will also inspect if there are any new roles that need to be added to the role set.
 For many processes there are specific important roles that do not fit any of the general roles. Some examples:
-\begin{itemize}
-\item {\em Phototropism} is the mechanism by which plants grow towards a light source. 
-The notion of a target {\em light source} and the {\em direction} or {\em orientation} of the growth
-are critical for distinguishing positive and negative phototropism. However, neither notion fits
-with any of the existing roles. 
-\item {\em Heat transfer} processes such as radiation have notion of a {\em medium} 
-which is critical for distinguishing between instances such as convection and radiation
-Again medium doesn't fit with any existing roles. 
-\end{itemize}
+	\begin{itemize}
+		\item {\em Phototropism} is the mechanism by which plants grow towards a light source. 
+		The notion of a target {\em light source} and the {\em direction} or {\em orientation} of the growth
+		are critical for distinguishing positive and negative phototropism. However, neither notion fits
+		with any of the existing roles. 
+	\item {\em Heat transfer} processes such as radiation have notion of a {\em medium} 
+		which is critical for distinguishing between instances such as convection and radiation
+		Again medium doesn't fit with any existing roles. 
+	\end{itemize}
 
-We propose a role assessment mechanism that attempts to identify frequently repeated arguments
+
+We propose a graph-based clustering formulation that attempts to identify frequently repeated arguments
 and assess how well they fit with existing roles. If a frequently repeated argument is assigned no role
 or is not assigned to any particular role with high confidence then we propose to induce a new role 
 for such arguments. 
+
+{\bf Formulation} 
+
+The role fillers can be viewed as entities that share specific role-specific relations with each other. 
+We propose to identify new roles by finding role fillers that share many connections with other 
+extracted role fillers. To this end, we create a graph where the nodes are role fillers and 
+edges are role labels or relations connecting the role fillers. Using the dependency graphs
+of the sentences, we locate other arguments (chunks) that are associated with the 
+extracted role fillers and add them to the graph. 
+
+[To be filled out...]
+
 
 
 
