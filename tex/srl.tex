@@ -1,5 +1,4 @@
 % !TEX root =  main.tex
-
 \newcommand{\sys}{ProcIterRoles}
 
 \section{ProcIteRoles Architecture}
@@ -11,7 +10,7 @@
 	\end{center}
 \end{figure}
 \sys\ allows for targeted iterative acquisition and refinement of process roles.
-The central idea is to collect high quality sentences and roles and iteratively expand the acquisition to include
+The main idea is to collect high quality sentences and roles and iteratively expand the acquisition to include
 additional sentences and other roles. 
 
 Figure~\ref{fig:architecture} shows the architecture of the acquisition process. 
@@ -149,10 +148,12 @@ To account for these differences we consider two extensions. Use different sets 
 
 [{\bf Consider changing this to a trained classifier. Use sentence patterns rather than definition or instance sentence distinction.}]
 
-\section{Role Aggregation and Assessment}
+\eat{
+
 [{\bf To be redone. Emphasize role discovery.}]
 Inference yields a set of roles that can be reliably identified from the input set of sentences. 
-The knowledge thus gathered is limited by the query patterns that we used to retrieve the sentences in the first place. To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles. 
+The knowledge thus gathered is limited by the query patterns that we used to retrieve the sentences in the first place. 
+To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles. 
 
 \subsection{Aggregation}
 First, given the current state of the knowledge base and newly inferred roles we devise a simple aggregation procedure that consolidates the roles -- resolving any inconsistencies between the different iterations\footnote{
@@ -169,7 +170,7 @@ We identify regular syntactic signatures that are not classified into existing r
 
 
 need to be filled, and pass them on to the sentence gathering components for expansion.
-
+}
 
 %instantiate new patterns to identify better sentences. The idea is to evaluate lexical alternatives that can form better queries to identify sentences. For example, sentences describing instances of conduction of heat are better found by adding {\em heat}. This type of query expansion using pseudo-relevance feedback is a well studied technique in information retrieval. We consider a restricted version of this problem, where are looking to instantiate existing query templates. 
 

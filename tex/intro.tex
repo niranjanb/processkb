@@ -96,14 +96,24 @@ capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain
 \subsection{Proposal}
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-\todo{Add a figure that shows a snippet from the KB we expect to produce.}
+We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand. Figure~\ref{fig:kbsnippet} shows an example for the envisioned knowledge. The table includes a set of pre-specified general purpose roles such as {\em Undergoer}, {\em Enabler} and also a process specific role {\em Medium} that is automatically derived from inspecting sentences that describe the process. The KB will list type information along with specific role fillers (most frequent) and the lexical patterns that realize the role fillers.
+
+\begin{figure}[hb]
+	\begin{center}
+	%13.5 x 15.15
+
+	\includegraphics[width=3.37in,height=3.75in]{figures/processkb-snippet.pdf} 	
+	\caption{\label{fig:kbsnippet} 
+	{An example entry for the process {\em thermal conduction}.}
+	}
+	\end{center}
+\end{figure}
 %While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
 %ProbBank style role labeling largely focused on a predicate centric view, which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
 %Our goal is to construct process level abstractions to reduce burden during reasoning, which is closer to a FrameNet style abstraction.
 %Pre-specifying frames requires expert labor and is not scalable.
 
 \subsubsection*{Representation}
-We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand.
 {\bf We propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
 This is similar to frame centric abstraction used by FrameNet. The key difference is that roles are still thematic but are defined with respect to a canonical predicate.
 Canonicalization during construction reduces reasoning burden by eliminating steps that only serve to establish equivalence of information realized via different predicates.
