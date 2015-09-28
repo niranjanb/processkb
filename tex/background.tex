@@ -1,9 +1,41 @@
 % !TEX root =  main.tex
-\section{Background}
+\section{Background and Preliminary Work}
+[{\bf Note to Peter: Please don't read this section yet!}]
+Much of SRL work has focused on interpreting sentences i.e., identifying roles expressed in a sentence.
+Our goal is different. 
+We seek to acquire knowledge about processes and represent them in terms of semantic roles.
+SRL is a challenging structure prediction task which often requires 
+
+Prior work either resorted to supervised learning techniques or to semi-supervised approaches 
+However, obtaining training data is often difficult and laborious, especially for complex tasks such as SRL.
+Several prior approaches have used semi-supervised learning (SSL) approaches to address this issue. 
+
+We propose a different approach, where we explicitly find sentences that express the roles of interest and do a joint inference of role labels across all sentences. 
+This allows us greater flexibility in choosing which sentences to use (we can maximize role coverage, diversity of instances etc.).
+Aligning the various spans within these sentences allows us to do collective labeling (similar in spirit to transduction learning).
+
+
+Our central premise is that the entities involved in a process and the roles they play provide a powerful representation for reasoning and QA. 
+Similar representations have been shown to be useful for Open-domain factoid question answering~\cite{shen2007using,pizzato2008indexing}, 
+and reading comprehension tasks on process descriptions~\cite{berantSrikumar14}.
+
 
 \subsection{Preliminary Work}
 
-\subsection{Research Challenges and Proposed Work}
+As preliminary work, we first analyzed the knowledge requirements for a set of questions targeting around 150 processes. 
+While a small collection of general purpose roles (e.g., Undergoer, Result, Enabler, Trigger) capture the key semantic elements for a 
+majority of the processes~\cite{louvan2015:kcap}, we also find that a set of domain specific roles (e.g., Direction, Medium, Physical\_Property, Chemical\_Property) are also critical. We propose to compose a representation that combines both general and domain specific roles. 
 
-This proposal aims to tackle the significant challenges in automatically constructing knowledge about processes. To address these challenges, we propose the following:
+Note that these roles are specified based on a canonical view of the process. One of the key challenges in question answering is in overcoming the variability of expression. Labeling with respect to a canonicalized view of the process is a deliberate attempt at addressing the variability problem. 
 
+Manually specifying roles for each process is not desirable from a scalability standpoint.
+%We will investigate scalable methods for automatically identifying the appropriate roles for a process. 
+Lexical and syntactic cues are indicative of certain roles in sentences. 
+For example a {\em [process] happens by [event]} pattern suggests the presence of a manner role, and the presence of locative prepositions can indicate location or orientation roles. 
+%Note that the goal of this step is to simply assess whether a particular role applies to the process frame and not to accurately determine the role filler itself.~\footnote{
+%Many cues are frame specific and using them in general for all frames can be problematic. 
+%However, the goal here is to be inclusive and determine which roles apply. 
+%It may be possible to over generate the frame with many plausible roles in this stage and prune it down in the next step if finding role fillers fails.} 
+%Furthermore, by aggregating these cues over large number of sentences, we can make reliable assessments about the importance of certain roles.~\footnote{
+%Some roles might be left implicit as common sense knowledge. 
+%Those remain beyond the scope of this work.} 

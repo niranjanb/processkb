@@ -1,15 +1,16 @@
 % !TEX root =  main.tex
 
 \newcommand{\sys}{ProcIterRoles}
+
+
+\section{ProcIteRoles: Architecture}
 \begin{figure}[hbt]
 	\begin{center}
-	\includegraphics[width=2.49in,height=2.45in]{figures/architecture} 	
+	%6.44 x 3.99
+	\includegraphics[width=3.22in,height=1.99in]{figures/architecture} 	
 	\caption{\label{fig:architecture} {Process KB Acquisition: Proposed Architecture}}
 	\end{center}
 \end{figure}
-
-\section{ProcIteRoles: Architecture}
-
 \sys\ allows for targeted iterative acquisition and refinement of process roles.
 The central idea is to collect high quality sentences and roles and iteratively expand the acquisition to include
 additional sentences and other roles. 
@@ -129,7 +130,7 @@ As noted earlier, the local extractor scores each text span $t_{i,k}$ from sente
  \cdots&  \mbox{[Other within sentence constraints.]}
 \end{align*}
 
-{\bf Sentence and Text Span Alignment}
+{\bf Alignment}
 
 The effectiveness of the joint inference relies on the ability to identify text spans in different sentences that should get the same role. 
 Prior work explored a dependency graph-based approach to align predicate-argument structures in sentences. A linear combination of the overlap in lexical and syntactic structures of the candidate text spans is used to evaluate whether they should get the same roles~\cite{furstenau-emnlp2009,furstenau2012semi,lang-naacl2010}.

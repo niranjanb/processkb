@@ -83,35 +83,37 @@ The coverage is likely worse for higher grade levels.
 On the other hand, automatic knowledge bases built via relation extraction
 capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
 
-
 \subsection{Proposal}
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand.
 %While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
 %ProbBank style role labeling largely focused on a predicate centric view, which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
 %Our goal is to construct process level abstractions to reduce burden during reasoning, which is closer to a FrameNet style abstraction.
 %Pre-specifying frames requires expert labor and is not scalable.
 
+\subsubsection*{Representation}
+We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand.
 {\bf We propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
 This is similar to frame centric abstraction used by FrameNet. The key difference is that roles are still thematic but are defined with respect to a canonical predicate.
-Canonicalization during construction reduces reasoning burden by eliminating steps that establish equivalences 
-between effectively equivalent bits of information realized via different predicates.
+Canonicalization during construction reduces reasoning burden by eliminating steps that only serve to establish equivalence of information realized via different predicates.
 
 %General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
+\subsubsection*{Role Extraction and Joint Inference}
+
 Handling the variations requires learning from large amounts of training data, which is laborious and requires expert labor.
 Also mentioned above, existing resources cannot be directly used. FrameNet does not cover the concepts of interest. 
 The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 Rather than building a role labeler that can work on any sentence, we adopt a simpler approach that works well on a smaller subset of sentences.
 
-{\bf The main idea behind the proposal is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
+{\bf The main idea is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
 Leveraging the vastness of the web greatly reduces the need to accurately identify roles in difficult to process sentences.
 Using a set of manually constructed query patterns we find sentences which convey the roles using expected lexico-syntactic constructs. 
 For instance "<process name> causes <x>" is a simple pattern that can be used to find the {\em result} role for a process. 
 This strong expectation for how arguments are realized allows us to turn SRL into a simpler task of assessing the confidence on the extraction using features that generalize better across different processes.  
 This allows us to substantially reduces the burden of annotating sentences for each process.
-Even though PropBank and FrameNet data are not directly usable, the predicate-based roles, and the frame structures provide evidence for composing our target semantic roles. 
+Even though PropBank and FrameNet data are not directly usable, the predicate-based roles and the frame structures can provide evidence for composing our target semantic roles. 
 We propose to exploit these features to build a local sentence-level extractor.
+
 
 Despite the targeted acquisition, local sentence-level extraction alone is not adequate, because not all lexico-syntactic patterns are unambiguous. 
 For example, "evaporates into <x>" extracts steam, a {\em result}, as well as atmosphere, a {\em location}. 
@@ -122,13 +124,16 @@ We build on prior work in Integer Linear Program (ILP) based semi-supervised and
 The ILP attempts to find an assignment of roles that maximizes the sum of extraction confidences, 
 while also minimizing disagreements in labels for similar text spans in similar sentences.
 
+\subsubsection*{Assessment and Discovery}
 While we start with a set of general purpose roles, {\em a priori} we don't assume which roles are applicable to each process as this manual assignment is not desirable from a scalability standpoint.
 Also not all critical information may be covered by the set of roles that hand.
 
-{\bf A third contribution includes methods that identify the subset of roles that apply to a process and discover new roles not part of the general vocabulary}. 
+{\bf A third contribution of this proposal includes methods that identify the subset of roles that apply to a process and discover new roles not part of the general vocabulary}. 
 As part of the targeted acquisition, we propose an iterative approach with methods to i) assess the coverage of the roles, ii) induce new roles by identifying consistently repeated arguments that don't fit existing roles, and iii) relevance feedback based query pattern generation to expand the knowledge.
 
-The generated knowledge base will be evaluated for intrinsic quality and external utility. For internal evaluations we will perform manual evaluation of the resulting KB. As part of the evaluation, we will also create a large scale curated KB, which relies on correcting the outputs from the system, rather than careful annotation of each sentence. We will also generate a gold standard of the desired roles and role fillers for evaluating coverage. As an external evaluation we will use the knowledge base for answering process recognition questions. All the resources and evaluation test beds will be shared with the research community for further research.
+\subsubsection*{Evaluation}
+
+The generated knowledge base will be evaluated for intrinsic quality and external utility. For internal evaluations we will perform manual evaluation of the resulting KB. As part of the evaluation, {\bf we will also create a large scale curated KB, which relies on correcting the outputs from the system, rather than careful annotation of each sentence}. We will also generate a gold standard of the desired roles and role fillers for evaluating coverage. As an external evaluation we will use the knowledge base for answering process recognition questions. All the resources and evaluation test beds will be shared with the research community for further research.
 
 \subsection{Prior Work and Contributions}
 
@@ -137,76 +142,10 @@ The motivation and direction for this proposal stems directly from our prior wor
 Upon successful completion this project would have made the following contributions:
 \begin{itemize}
 \item Release of a knowledge base covering semantic representations of processes for grade level science.
-\item Methods for automatically gathering high quality sentences that cover a target set of roles. 
+\item Methods for gathering high quality sentences that cover a target set of roles. 
 \item A joint inference method that reconciles roles across different sentences.  
-\item Methods for automatically assessing the applicability, coverage and importance of roles with respect to a target process.
+\item Methods for assessing applicability, coverage and discovery of new roles.
 \end{itemize}
 
- 
 
 
-%The central idea is to automatically compose a semantic representation using a pre-determined vocabulary of semantic roles. 
-%Having identified the roles of interest, we will seek out sentences that express these roles and build extractors for these roles via bootstrapping.
-%\footnote{
-%We call these extractors rather than semantic parsers, since the goal here is to build knowledge about these processes and 
-%not necessarily to build a parser that can reliably identify {\em all} semantic roles expressed in a sentence.} 
-
-%We will conduct intrinsic and external evaluations. 
-%We will create a manual target representation for intrinsic evaluation, and use the 4th grade science questions as an external application.
-%The proposed work has three major research components:
-
-\section{Background and Preliminary Work}
-[{\bf Note to Peter: Please don't read this section yet!}]
-Much of SRL work has focused on interpreting sentences i.e., identifying roles expressed in a sentence.
-Our goal is different. 
-We seek to acquire knowledge about processes and represent them in terms of semantic roles.
-SRL is a challenging structure prediction task which often requires 
-
-Prior work either resorted to supervised learning techniques or to semi-supervised approaches 
-However, obtaining training data is often difficult and laborious, especially for complex tasks such as SRL.
-Several prior approaches have used semi-supervised learning (SSL) approaches to address this issue. 
-
-We propose a different approach, where we explicitly find sentences that express the roles of interest and do a joint inference of role labels across all sentences. 
-This allows us greater flexibility in choosing which sentences to use (we can maximize role coverage, diversity of instances etc.).
-Aligning the various spans within these sentences allows us to do collective labeling (similar in spirit to transduction learning).
-
-
-Our central premise is that the entities involved in a process and the roles they play provide a powerful representation for reasoning and QA. 
-Similar representations have been shown to be useful for Open-domain factoid question answering~\cite{shen2007using,pizzato2008indexing}, 
-and reading comprehension tasks on process descriptions~\cite{berantSrikumar14}.
-
-
-\subsection{Preliminary Work}
-
-As preliminary work, we first analyzed the knowledge requirements for a set of questions targeting around 150 processes. 
-While a small collection of general purpose roles (e.g., Undergoer, Result, Enabler, Trigger) capture the key semantic elements for a 
-majority of the processes~\cite{louvan2015:kcap}, we also find that a set of domain specific roles (e.g., Direction, Medium, Physical\_Property, Chemical\_Property) are also critical. We propose to compose a representation that combines both general and domain specific roles. 
-
-Note that these roles are specified based on a canonical view of the process. One of the key challenges in question answering is in overcoming the variability of expression. Labeling with respect to a canonicalized view of the process is a deliberate attempt at addressing the variability problem. 
-
-Manually specifying roles for each process is not desirable from a scalability standpoint.
-%We will investigate scalable methods for automatically identifying the appropriate roles for a process. 
-Lexical and syntactic cues are indicative of certain roles in sentences. 
-For example a {\em [process] happens by [event]} pattern suggests the presence of a manner role, and the presence of locative prepositions can indicate location or orientation roles. 
-%Note that the goal of this step is to simply assess whether a particular role applies to the process frame and not to accurately determine the role filler itself.~\footnote{
-%Many cues are frame specific and using them in general for all frames can be problematic. 
-%However, the goal here is to be inclusive and determine which roles apply. 
-%It may be possible to over generate the frame with many plausible roles in this stage and prune it down in the next step if finding role fillers fails.} 
-%Furthermore, by aggregating these cues over large number of sentences, we can make reliable assessments about the importance of certain roles.~\footnote{
-%Some roles might be left implicit as common sense knowledge. 
-%Those remain beyond the scope of this work.} 
-
-%\subsection{Knowledge Extraction}
-
-
-%\subsection{Semantic Interpretation -- Parsing Questions using Acquired Knowledge}
-%Developing a semantic parser for questions based on the acquired knowledge -- [Technical contribution here...]
-
-
-\eat{\subsection{Summary}
-
-We propose to develop methods for composing semantic role knowledge about processes. Successful completion of the work will result in the following contributions:
-\begin{itemize}
-\item Knowledge Representation -- Method for automatically determining roles that apply for a target concept. This is distinct from existing work which either assumes that the roles are fully pre-specified or are induced fully automatically. Our proposal occupies a middle-ground that leverages cues 
-\end{itemize}}
-%
