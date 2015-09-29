@@ -11,7 +11,7 @@ Scalable acquisition of deeper semantic knowledge is essential for effective rea
 
 Much progress has been made on question answering involving simple facts~\cite{berant2013semantic,fader2014open,bordes2014open,reddy2014large}. 
 This is in large part due to the availability of large scale curated relational knowledge bases such as Freebase, coupled with significant advances in automatic relation extraction~\cite{schmitz2012open,carlson2010toward,suchanek2007yago}. 
-Similar advances in large scale inference-supporting knowledge is vital for making significant advances in reasoning-based QA tasks.
+Similar advances in large scale inference-supporting knowledge is vital for making significant progress in reasoning-based QA tasks.
 
 \eat{Recently introduced benchmarks such as {\em MCTest} reading comprehension challenge~\cite{richardson2013mctest}, grade-level science exams~\cite{clark2015elementary}, and process comprehension tasks~\cite{berantSrikumar14} motivate reasoning-based approaches to question answering (QA).
 Our prior work on knowledge requirements analysis for the grade-level exams shows the need for deep inference supporting knowledge~\cite{chb2013:akbc,clark2014:akbc}.
@@ -81,14 +81,14 @@ In this case, the system needs to first identify {\em what is being heated} (the
 Then, knowledge about {\em heating} should allow it to conclude that the thing being heated (the pot) will become hot. 
 Knowledge about {\em conduction} should suggest that anything {\em in direct contact} with a hot object (the pot handle) should also become hot.
 Combining these bits the system can verify that the described scenario indeed matches the conduction process.
-Replicating this type of reasoning requires the knowledge about conduction and heating in a suitable computational representation.
+Replicating this type of reasoning requires knowledge about conduction and heating in a suitable computational representation.
+\todo{[Reads very rough.]}
 %Specifically the knowledge about conduction should convey that there are two entities that are in direct contact, one of which is being heated or is hot, 
 %and the result of conduction is that the other object also becomes {\em hot}. 
 
-
-At a high level the main bits of required knowledge are -- what is undergoing the process, what the result is and so on. 
+At a high level the main bits of required knowledge are: what is undergoing the process, what is the result, what is the main action etc.
 These bits of information are naturally encoded as semantic roles.
-PropBank and FrameNet are two of the highly successful efforts which provide this kind of semantic role based knowledge.
+PropBank~\cite{} and FrameNet~\cite{} are two of the highly successful efforts which provide this kind of semantic role based knowledge.
 They have spurred tremendous advances in automatic semantic role labeling and their applications~\cite{}.
 While these resources provide exhaustive coverage for modeling general open-domain actions,
 they do not cover knowledge about scientific processes. 
@@ -132,15 +132,21 @@ The table includes a set of pre-specified general purpose roles such as {\em Und
 Similar to FrameNet we propose to determine roles with respect to the semantics of the process rather than with respect to the specific verb (or predicate) that is used to describe the process.
 This canonicalization is desirable as it reduces reasoning time burden by eliminating need for steps that only establish equivalence of information realized via different predicates.
 %
-\subsubsection*{Role Extraction, Joint Inference and Continuous Refinement}
+\subsubsection*{Iterative Role Acquisition and Refinement}
 %The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
 General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
 Handling the variations requires learning from large amounts of training data, which is laborious and requires expert labor.
 Also as discussed earlier, existing semantic resources such as FrameNet or PropBank cannot be directly used for training as they do not cover the target concepts.
-Rather than build a role labeler that can work on any sentence, 
-we propose a simpler approach that works well on a smaller subset of sentences that convey role information in expected constructs.
 
-We propose an iterative procedure that exploits the abundance and variety of information on the web to acquire the necessary knowledge.
+Our key premise is that to gather role knowledge we don't need a semantic role labeler that works well on all sentences. 
+We are interested in role acquisition and not role interpretation.
+With the abundance and variety of information available on the web, 
+we can target extraction from sentences that convey the same information in expected (easy to extract) constructs.
+
+We propose an iterative role acquisition and expansion pipeline that includes the following:
+%we propose a simpler approach that works well on a select subset of sentences 
+%that convey role information in expected constructs 
+%We propose an iterative procedure that exploits the abundance and variety of information on the web to acquire the necessary knowledge.
 \begin{itemize}
 \item {\bf Targeted Pattern-based Extraction} --  We build a simple pattern-based local role extractor augmented with a classifier.
 Beginning with a set of manually constructed query patterns we search the web to find sentences that match these patterns.
