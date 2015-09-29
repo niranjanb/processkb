@@ -1,51 +1,49 @@
 % !TEX root =  main.tex
-\eat{\section*{Notes}
-\begin{itemize}
-\item Are you pitching the resource or the technique? The answer is the technique. The pitch is essentially that of acquiring representations about any target resource by explicitly querying for easy to extract sentences. This works for certain types of target concepts.
-\item Pitch broadly to any domain where the target phenomena are described in many ways. 
-\item Pitch utility for other applications.
-\item How is this different from relation extraction?
-\item Acknowledge the focus is on sentences that contain the process name. Often times discourse is needed to extract other information.
-\item What is the secret sauce? It is the sauce that was used for Open IE, ie., leveraging extractable sentences those which convey information in expected ways.
-\item What is the formalism? Constrained Conditional Models or Graphical Models? 
-\item Is there any issue with using Google API? Mention you will consider using ClueWeb or PeterT's corpus.
-\item How is the work different from semi-supervised and unsupervised semantic role induction?
-\item How is this different from template induction for event extraction? 
-\end{itemize}
-\newpage
-}
 \section{Introduction}
-\eat{
-Question answering and knowledge extraction research has focused on extracting and reasoning with simple facts expressible as binary relations.
-Open-domain QA and factoid question answering on the web has driven much of this research. 
-In contrast grade-level science exams go beyond retrieval abilities and test understanding and use of knowledge to reason about specific scenarios~\cite{clark2014:akbc}.
 
-% in a form that is effective for reasoning a
-% ability to recognize a scenario and map elements of the scenario to known scientific processes or phenomena. 
-%We refer to this as process recognition.
-%We propose automatic acquisition of semantic-role based knowledge base of simple physical, chemical, and other natural phenomena. 
-% Our vision is to acquire knowledge that can be used to effectively reason about scenarios and situations using scientific knowledge.
-}
+%Many AI tasks such as question answering require ability to interpret and reason about scenarios and situations.
+Knowledge extraction and reasoning are central for many Artificial Intelligence systems. 
+Recently introduced tasks such as {\em MCTest} reading comprehension challenge~\cite{richardson2013mctest}, grade-level science exams~\cite{clark2015elementary}, and process comprehension tasks~\cite{berantSrikumar14} serve as excellent benchmarks for developing reasoning-based question answering systems. 
+These tasks test the ability of the systems to interpret and reason about scenarios and situations.
+Knowledge requirements analysis for grade-level science exams shows the need for deep inference supporting knowledge~\cite{chb2013:akbc,clark2014:akbc}.
+Also, even with advanced state-of-the-art reasoning techniques, shallow text-derived knowledge is ineffective due to lexical and syntactic variations in language~\cite{khot2015:emlnlp}.
+Scalable acquisition of deeper semantic knowledge is essential for effective reasoning in these tasks. 
 
-Our vision is targeted acquisition of inference-supporting knowledge that can be used for reasoning tasks such as Question Answering (QA).
+Much progress has been made on question answering involving simple facts~\cite{berant2013semantic,fader2014open,bordes2014open,reddy2014large}. 
+This is in large part due to the availability of large scale curated relational knowledge bases such as Freebase, coupled with significant advances in automatic relation extraction~\cite{schmitz2012open,carlson2010toward,suchanek2007yago}. 
+Similar advances in large scale inference-supporting knowledge is vital for making significant advances in reasoning-based QA tasks.
+
+\eat{Recently introduced benchmarks such as {\em MCTest} reading comprehension challenge~\cite{richardson2013mctest}, grade-level science exams~\cite{clark2015elementary}, and process comprehension tasks~\cite{berantSrikumar14} motivate reasoning-based approaches to question answering (QA).
+Our prior work on knowledge requirements analysis for the grade-level exams shows the need for deep inference supporting knowledge~\cite{chb2013:akbc,clark2014:akbc}.
+Even with advanced state-of-the-art reasoning techniques, shallow text-derived knowledge is ineffective due to lexical and syntactic variations in language~\cite{khot2015:emlnlp}.
+Recent work on process comprehension also shows that extracting richer semantic knowledge is more effective~\cite{berantSrikumar14}.
+Scalable acquisition of deeper semantic knowledge is essential for effective reasoning in these tasks. }
+
+In this work, we focus on knowledge acquisition methods with grade science exams as an end application. 
+In particular we focus on a subset of knowledge about physical, chemical, and other natural phenomena.
+The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. We refer to this as process knowledge. 
+\footnote{Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to other tasks and domains.}
+
+\eat{Our vision is targeted acquisition of inference-supporting knowledge that can be used for reasoning tasks such as Question Answering (QA).
 In particular we focus on knowledge acquisition for standardized test benchmarks such as grade-level science exams~\cite{clark2015elementary}.  Our prior work on these tasks provide strong motivation for reasoning based approaches~\cite{clark2014:akbc,chb2013:akbc}.
 Lexical and syntactic variations render shallow text-derived knowledge ineffective for reasoning, even when using advanced state-of-the-art techniques~\cite{khot2015:emlnlp}. 
 Deeper semantic representations are critical for effective reasoning.
 
 This proposal investigates methods for acquiring knowledge about physical, chemical, and other natural phenomena.
 The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. We refer to this as process knowledge. 
-Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to other tasks and domains.
+Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to other tasks and domains.}
 
 \subsection{Motivation}
-We motivate the need for a semantic-role based representation using two examples from 4$^{th}$ grade science exams. These questions test the ability to recognize a process based on the description of a scenario. \\
-
+%We illustrate the need for inference-supporting knowledge using two examples from 4$^{th}$ grade science exams. 
+%These questions test the ability to recognize a process based on the description of a scenario. \\
+We illustrate the need for inference supporting knowledge using the following example from a 4$^{th}$ grade science exam.
 \begin{figure}[hbt]
 	\begin{center}
-	%9.06 x 4.35
 	%12.08 x 2.9
+	% 12.08 x 1.90
+	\includegraphics[width=6.04in,height=0.95in]{figures/single-question-stretch.pdf} 	
 	\vspace{-1em}
-	\includegraphics[width=6.04in,height=1.45in]{figures/questions-stretch.pdf} 	
-	\caption{\label{fig:questions} {Example Questions from New York Regents Exam.}}
+	%\caption{\label{fig:questions} {Example Question from New York Regents Exam.}}
 	\end{center}
 \end{figure}
 
@@ -69,69 +67,81 @@ We motivate the need for a semantic-role based representation using two examples
 
 
 %The knowledge necessary for this task is naturally expressed via simple semantic roles. 
-The first question tests knowledge about biological processes.
+\eat{The first question tests for knowledge about biological processes.
 {\em Photosynthesis} and {\em respiration} both involve sugar and energy. 
 Photosynthesis converts light energy to sugar, whereas (cellular) respiration releases energy in the sugar by breaking it down. 
 Not surprisingly these processes are described using similar words, which makes bag-of-words style reasoning unreliable. 
 Understanding the different roles that energy and sugar play in these processes, and knowledge of the main actions involved is key to effective reasoning.
-
-The second question tests knowledge about heat transfer mechanisms.
+}
+%The second question requires reasoning about heat transfer mechanisms.
+The question tests reasoning about heat transfer mechanisms.
 To establish that conduction is the cause, a reasoning system must establish that there is some heat transfer happening through {\em direct contact}. 
-We envision a reasoning system that first interprets the input scenario in terms of entities and their semantic roles. 
-In this case, the system would first identify {\em what is being heated} (the pot), and {\em what is the purported result} of the heating (the pot handle). 
-Then, it will verify if this interpretation of the actions and the roles match with the expected actions and roles of a conduction process. 
-Specifically the knowledge about conduction should convey that there are two entities that are in direct contact, one of which is being heated or is hot, 
-and the result of conduction is that the other object also becomes {\em hot}. 
-These bits of information are naturally encoded as semantic roles.
+We envision a system that first interpret the scenario and apply its knowledge about the heating process and the conduction process. 
+In this case, the system needs to first identify {\em what is being heated} (the pot), and {\em what is the purported result} of the heating (the pot handle becoming hot). 
+Then, knowledge about {\em heating} should allow it to conclude that the thing being heated (the pot) will become hot. 
+Knowledge about {\em conduction} should suggest that anything {\em in direct contact} with a hot object (the pot handle) should also become hot.
+Combining these bits the system can verify that the described scenario indeed matches the conduction process.
+Replicating this type of reasoning requires the knowledge in a suitable computational representation.
+%Specifically the knowledge about conduction should convey that there are two entities that are in direct contact, one of which is being heated or is hot, 
+%and the result of conduction is that the other object also becomes {\em hot}. 
 
-Existing lexical semantic resources and knowledge bases are not well suited for our goals.
-
-On the one hand, existing semantic resources such as FrameNet and PropBank provide different representations of 
-general open-domain actions but do not cover knowledge about scientific processes. 
+The knowledge required -- what is undergoing the process, what the result is and so on -- are naturally encoded as semantic roles.
+PropBank and FrameNet are two of the highly successful efforts which provide this kind of semantic role based knowledge.
+%for creating broad coverage semantic role based knowledge~\cite{}.
+They have spurred tremendous advances in automatic semantic role labeling and their applications~\cite{}.
+While these resources provide exhaustive coverage for modeling general open-domain actions,
+they do not cover knowledge about scientific processes. 
 FrameNet, for instance, does not have entries for nearly half of the processes described in 4th grade science exams. 
-The coverage is likely worse for higher grade levels. 
-On the other hand, automatic knowledge bases built via relation extraction
-capabilities (e.g., Open IE) scale to arbitrary target concepts but only contain simple binary relations e.g., (Arg1, Rel, Arg2), that do not adequately capture the semantics.
+The coverage is likely worse for higher grade levels with deeper knowledge domains. 
 
 \subsection{Proposal}
 
 In response, we propose to build a knowledge base about physical, chemical, and biological processes from their textual descriptions. 
-We compose a semantic representation using a combination of pre-determined vocabulary of semantic roles and derive new roles on demand. Figure~\ref{fig:kbsnippet} shows an example for the envisioned knowledge. The table includes a set of pre-specified general purpose roles such as {\em Undergoer}, {\em Enabler} and also a process specific role {\em Medium} that is automatically derived from inspecting sentences that describe the process. The KB will list type information along with specific role fillers (most frequent) and the lexical patterns that realize the role fillers.
+
+\subsubsection*{Representation}
+
+Our primary motivation is to design a representation that facilitates reasoning while balancing extractability.
+We propose to compose knowledge about each process using a set of pre-determined vocabulary of semantic roles and derive additional new roles automatically as needed.
+While many competing role sets exist, we propose a role vocabulary that covers most inferential needs in the target process recognition dates~\cite{louvan2015:kcap}.
+By leveraging a common vocabulary we expect to gain from shared learning for the same roles across different processes.
+
+Similar to FrameNet we propose to determine roles with respect to the semantics of the process rather than with respect to the specific verb (or predicate) that is used to describe the process.
+This canonicalization is desirable as it reduces reasoning time burden by eliminating need for steps that only establish equivalence of information realized via different predicates.
 
 \begin{figure}[hb]
 	\begin{center}
 	%13.5 x 15.15
-
-	\includegraphics[width=3.37in,height=3.75in]{figures/processkb-snippet.pdf} 	
+	%20.01 x 6.78
+	%18.79 x 6.78
+	\includegraphics[width=6.26in,height=2.26in]{figures/processkb-snippet.pdf} 	
 	\caption{\label{fig:kbsnippet} 
 	{An example entry for the process {\em thermal conduction}.}
 	}
 	\end{center}
 \end{figure}
-%While there has been much work in linguistics on identifying a complete list of thematic roles~\cite{}, there is not much of a consensus~\cite{}.
-%ProbBank style role labeling largely focused on a predicate centric view, which is appropriate for reasoning about general purpose actions (e.g., change, get, give). 
-%Our goal is to construct process level abstractions to reduce burden during reasoning, which is closer to a FrameNet style abstraction.
-%Pre-specifying frames requires expert labor and is not scalable.
+With each role we include role fillers which are the frequent entries for that role, types which encodes class level information about the fillers, and syntactic argument realization patterns for these fillers.
+We also include the source sentences from which the knowledge was derived.
+Figure~\ref{fig:kbsnippet} shows an example for the envisioned knowledge. 
+The table includes a set of pre-specified general purpose roles such as {\em Undergoer}, {\em Enabler} and also a process specific role {\em Medium} that is automatically derived from inspecting sentences that describe the process. 
 
-\subsubsection*{Representation}
-{\bf We propose to identify roles with respect to a canonical version of the process, rather than based on the actual lexical realization in the sentence.}
-This is similar to frame centric abstraction used by FrameNet. The key difference is that roles are still thematic but are defined with respect to a canonical predicate.
-Canonicalization during construction reduces reasoning burden by eliminating steps that only serve to establish equivalence of information realized via different predicates.
+%
+\subsubsection*{Iterative Role Extraction and Joint Inference}
 
-%General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
-\subsubsection*{Role Extraction and Joint Inference}
+We devise an iterative procedure that exploits the abundance and variety of information on the web to acquire the necessary knowledge.
 
+%The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
+General semantic role labeling task is challenging because of the lexical and syntactic variations in role realizations. 
 Handling the variations requires learning from large amounts of training data, which is laborious and requires expert labor.
-Also mentioned above, existing resources cannot be directly used. FrameNet does not cover the concepts of interest. 
-The need for a canonicalized representation precludes the direct use of existing annotations or tools built for PropBank.
-Rather than building a role labeler that can work on any sentence, we adopt a simpler approach that works well on a smaller subset of sentences.
+Also as discussed earlier, existing semantic resources such as FrameNet or PropBank cannot be directly used for training as they do not cover the target concepts.
+Rather than build a role labeler that can work on any sentence, we propose a simpler approach that works well on a smaller subset of sentences.
 
-{\bf The main idea is a targeted acquisition of knowledge from sentences that convey information in expected ways.}
+{\bf We tackle the role acquisition problem by explicitly searching for sentences that convey role information using specific patterns.}
+%{\bf The main idea is a acquisition of knowledge from sentences that convey information in expected ways.}
 Leveraging the vastness of the web greatly reduces the need to accurately identify roles in difficult to process sentences.
 Using a set of manually constructed query patterns we find sentences which convey the roles using expected lexico-syntactic constructs. 
 For instance "<process name> causes <x>" is a simple pattern that can be used to find the {\em result} role for a process. 
 This strong expectation for how arguments are realized allows us to turn SRL into a simpler task of assessing the confidence on the extraction using features that generalize better across different processes.  
-This allows us to substantially reduces the burden of annotating sentences for each process.
+This allows us to substantially reduce the burden of annotating sentences for each process.
 Even though PropBank and FrameNet data are not directly usable, the predicate-based roles and the frame structures can provide evidence for composing our target semantic roles. 
 We propose to exploit these features to build a local sentence-level extractor.
 
