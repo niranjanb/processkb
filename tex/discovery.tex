@@ -16,7 +16,7 @@ While it is possible to infer new roles jointly with the current KB at each iter
 Therefore, we propose a simple aggregation procedure that consolidates the roles by effectively resolving any inconsistencies between the different iterations.
 %Last we will also explore methods that automatically assesses the generated knowledge in terms of coverage and quality
 
-{\bf Role Discovery}
+{\bf Role Discovery and Refinement}
 
 At each iteration we will also inspect if there are any new roles that need to be added to the role set.
 For many processes there are specific important roles that do not fit any of the general roles. Some examples:
@@ -25,27 +25,23 @@ For many processes there are specific important roles that do not fit any of the
 		The notion of a target {\em light source} and the {\em direction} or {\em orientation} of the growth
 		are critical for distinguishing positive and negative phototropism. However, neither notion fits
 		with any of the existing roles. 
-	\item {\em Heat transfer} processes such as radiation have notion of a {\em medium} 
+	\item {\em Heat transfer} processes such as radiation have notion of a {\em medium}, 
 		which is critical for distinguishing between instances such as convection and radiation
 		Again medium doesn't fit with any existing roles. 
 	\end{itemize}
 
+Our objective is similar to the goals of prior work on unsupervised role induction. They use a deterministic procedure for candidate argument identification and clustered syntactic signatures of these arguments to induce roles. However, unlike the standard unsupervised setting, we have a set of roles that have been identified already. Further, we find that most of these process specific new roles tend to be realized via prepositional, noun-noun, or other noun modifier relations that attach to one of the existing roles. Information about how these candidates are related to currently identified roles is likely to help.
 
-We propose a graph-based clustering formulation that attempts to identify frequently repeated arguments
-and assess how well they fit with existing roles. If a frequently repeated argument is assigned no role
-or is not assigned to any particular role with high confidence then we propose to induce a new role 
-for such arguments. 
+\begin{itemize}
+\item We propose to investigate methods for breaking coarse-grained roles into multiple sub-roles.
+ and preposition relation extraction tools 
 
-{\bf Formulation} 
+We use two sources for identifying candidates. 
+First, we obtain candidates from the local extraction pipeline that were assigned low scores by the inference and then we extend it with candidates from a separate PropBank style argument identification pipeline~\cite{}. Second, we also inspect role fillers for existing roles that can be broken up into fine-grained roles. For example, "towards a light source" can be further split into two roles one relating to the "direction" of the growth and the other relating to the goal "light source".
 
-The role fillers can be viewed as entities that share specific role-specific relations with each other. 
-We propose to identify new roles by finding role fillers that share many connections with other 
-extracted role fillers. To this end, we create a graph where the nodes are role fillers and 
-edges are role labels or relations connecting the role fillers. Using the dependency graphs
-of the sentences, we locate other arguments (chunks) that are associated with the 
-extracted role fillers and add them to the graph. 
+\item Having identified candidates we iterate through the pipeline to find additional sentences that contain these candidates and the core roles or predicates for the process. Following prior role induction work, we extract a context signature for each candidate and cluster the candidates that are realized with similar contexts. As mentioned earlier, we propose to also use the semantic role context of the candidates. 
 
-[To be filled out...]
+\end{itemize}
 
 
 
