@@ -1,5 +1,25 @@
 % !TEX root =  main.tex
 \section{Background and Preliminary Work}
+
+\subsection{Background and Prior Work}
+%Many AI tasks such as question answering require ability to interpret and reason about scenarios and situations.
+
+Knowledge extraction and reasoning are central for many Artificial Intelligence systems. 
+Recently introduced tasks such as {\em MCTest} reading comprehension challenge~\cite{richardson2013mctest}, grade-level science exams~\cite{clark2015elementary}, and process comprehension tasks~\cite{berantSrikumar14} serve as excellent benchmarks for developing reasoning-based question answering systems. 
+These tasks test the ability of the systems to interpret and reason about scenarios and situations.
+Knowledge requirements analysis for grade-level science exams shows the need for deep inference supporting knowledge~\cite{chb2013:akbc,clark2014:akbc}.
+Also, even with advanced state-of-the-art reasoning techniques, shallow text-derived knowledge is ineffective due to lexical and syntactic variations in language~\cite{khot2015:emlnlp}. Scalable acquisition of deeper semantic knowledge is essential for effective reasoning in these tasks. 
+
+Much progress has been made on question answering involving simple facts~\cite{berant2013semantic,fader2014open,bordes2014open,reddy2014large}. 
+This is in large part due to the availability of large scale curated relational knowledge bases such as Freebase, coupled with significant advances in automatic relation extraction~\cite{schmitz2012open,carlson2010toward,suchanek2007yago}. Similar advances in large scale inference-supporting knowledge is vital for making significant progress in reasoning-based QA tasks.
+
+In this work, we focus on knowledge acquisition methods with grade science exams as an end application. 
+In particular we focus on a subset of knowledge about physical, chemical, and other natural phenomena.
+The goal is to derive knowledge that allows effective reasoning about scenarios involving these phenomena. We refer to this as process knowledge. 
+\footnote{Our representation and acquisition methods will be targeted towards the grade science benchmarks but the methodology is general and can be applied to other tasks and domains.}
+
+
+
 \todo{Needs a rewrite. Don't read yet.}
 Much of SRL work has focused on interpreting sentences i.e., identifying roles expressed in a sentence.
 Our goal is different. 

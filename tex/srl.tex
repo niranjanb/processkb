@@ -1,15 +1,19 @@
 % !TEX root =  main.tex
 \newcommand{\sys}{ProcIterRoles}
 
-\section{ProcIteRoles Architecture}
+\section{\sys Architecture}
+
 \begin{figure}[hbt]
 	\begin{center}
 	%6.44 x 3.99
-	\includegraphics[width=3.22in,height=1.99in]{figures/architecture.pdf} 	
+	%6.89 x 5.42
+	% 11.36 x 5.42
+	\includegraphics[width=5.68in,height=2.21in]{figures/architecture.pdf} 	
 	\caption{\label{fig:architecture} {Process KB Acquisition: Proposed Architecture}}
 	\end{center}
 \end{figure}
-\sys\ allows for targeted iterative acquisition and refinement of process roles.
+
+\sys\ allows for targeted iterative extraction and expansion of process roles.
 The main idea is to collect high quality sentences and roles and iteratively expand the acquisition to include
 additional sentences and other roles. 
 
@@ -44,19 +48,18 @@ Again with the vastness of the web, constructing effective role patterns is crit
 
 To address these challenges we propose two strategies. First, we target definitional sentences which convey the most salient information. Second, we espouse a feedback strategy that leverages high quality sentences gathered in the earlier phases to guide search in the later stages.
 
-\subsection{Querying}
+\subsection{Role Query Generator}
 
 We propose to investigate simple but effective query pattern formulation methods. 
-On a related task, our prior work had explored techniques that can find sentences that convey information about different aspects with respect to a topic (e.g., biographical aspects of a person). 
 Our preliminary work shows that simple lexical templates e.g., "<process name> is the process by which" can yield high quality {\em definitional} sentences about processes. 
 We use additional lexical templates for roles with regular lexicon-syntactic constructions e.g., "<process name> causes" is an effective pattern to find sentences that express the {\em result} roles of processes. The key challenge is to figure out querying patterns for roles with diverse lexical realizations. We propose adopting the standard bootstrapping approach used in relation extraction techniques to borrow functional patterns that introduce roles in other processes. Bootstrapping is known to introduce noise and topic drift issues. However, our approach doesn't entirely rely on the patterns alone. Rather we propose strong scoring and filtering mechanisms that can remove noise introduced via bootstrapping.
-
-\subsection{Scoring and Filtering}
+%On a related task, our prior work had explored techniques that can find sentences that convey information about different aspects with respect to a topic (e.g., biographical aspects of a person). 
+\subsection{Sentence Classifier}
 
 To account for the challenges in relevance, we seek to build a distributional context model that is seeded with some domain corpus. This model is then refined iteratively to allow for role coverage. 
 Sentences from the web have high variance in quality and relevance. 
 
-\section{Role Extraction}
+\section{Extraction}
 
 Many different approaches have been investigated for role labeling.
 The learning formulations studied range from pipelined classification approaches~\cite{gildea2002automatic,bjorkelund2009multilingual}, 
@@ -73,7 +76,7 @@ we pose a classification task to determine if the candidate  is indeed expressin
 Then, we pose a joint inference task over multiple sentences, which allows us to use role decisions on similar 
 text spans to influence each other. 
 
-\subsection{Local Role Extraction}
+\subsection{Pattern-based Extraction}
 
 We set up a local (within sentence per role) extraction task. Relying on the patterns alone is problematic. Hand authored patterns, especially specifying the expected syntactic structure of the argument is quite limiting. Instead we generate many possible arguments that match a range of weakly indicative argument patterns and train a classifier. 
 
