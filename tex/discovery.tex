@@ -1,26 +1,28 @@
 % !TEX root =  main.tex
-\section{Role Assessment and Discovery}
+\section{Iterative Knowledge Expansion}
 
-Inference yields a set of role fillers that can be reliably identified from the input set of sentences. 
-The yield is limited by the set of roles and the query patterns used to retrieve sentences for these roles.
-
-{\bf Assessment}
-
+We envision an iterative procedure. In each iteration, we first find sentences that match all query patterns for all the roles. 
+Inference yields a set of role fillers that can be reliably identified from this combined input set of sentences. 
+However, the yield of role fillers is limited by the set of roles and the query patterns used.
 To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles to find new query patterns. 
-Traditional bootstrapping methods coupled with query expansion techniques from information retrieval 
-can be exploited to instantiate query templates with new patterns derived from the retrieved sentences. 
-The new query patterns are then used to repeat the entire procedure to derive new fillers. 
 
-The iterative procedure however can yield role fillers that are inconsistent with roles obtained from previous iterations.
-While it is possible to infer new roles jointly with the current KB at each iteration, it can introduce too many variables in inference and render it inefficient.
-Therefore, we propose a simple aggregation procedure that consolidates the roles by effectively resolving any inconsistencies between the different iterations.
-%Last we will also explore methods that automatically assesses the generated knowledge in terms of coverage and quality
+\subsection{Role Assessor}
 
-{\bf Role Discovery and Refinement}
+The iterative process poses a potential challenge in consolidating the new role fillers with the existing knowledge.
+Role fillers from the current iteration may be inconsistent with roles obtained from previous iterations. 
+We build a role assessor that explores two approaches: 1) A pipelined winner-takes-all approach that compares the normalized inference scores from each iteration to determine a winner. The inference for the losing iteration is repeated again.  2) A more integrated approach that uses previously determined labels as strong priors (or constraints) during joint inference, thereby eliminating the need for repeated inferences. The key distinction between the methods is the trade-off in the number of variables and constraints in each iteration versus the number of iterations that are needed. 
+
+\subsection{Pattern Expansion}
+
+We propose to combine bootstrapping techniques from information extraction with relevance modeling techniques from information retrieval. For each role, we identify the role fillers that were inferred with the highest confidence and use them to locate new query patterns. We will inspect the sentences that are already retrieved and also issue new queries to find additional sentences. 
+We will extract the most compact lexico-syntactic dependency patterns involving the fillers and use them as candidate patterns.
+To avoid noise compounding and topic drift, we propose to evaluate the candidates based on the relevance of their sentence contexts to the process as a whole as well as to other sentences expressing the role. We propose to borrow ideas from our prior work on sentence relevance models~\cite{balasubramanian2009automatic} and standard relevance modeling techniques from IR~\cite{lavrenko2001relevance}.
+
+\subsection{Role Expansion}
 
 At each iteration we will also inspect if there are any new roles that need to be added to the role set.
 For many processes there are specific important roles that do not fit any of the general roles. Some examples:
-	\begin{itemize}
+	\begin{itemize}[noitemsep,nolistsep]
 		\item {\em Phototropism} is the mechanism by which plants grow towards a light source. 
 		The notion of a target {\em light source} and the {\em direction} or {\em orientation} of the growth
 		are critical for distinguishing positive and negative phototropism. However, neither notion fits
@@ -30,18 +32,15 @@ For many processes there are specific important roles that do not fit any of the
 		Again medium doesn't fit with any existing roles. 
 	\end{itemize}
 
-Our objective is similar to the goals of prior work on unsupervised role induction. They use a deterministic procedure for candidate argument identification and clustered syntactic signatures of these arguments to induce roles. However, unlike the standard unsupervised setting, we have a set of roles that have been identified already. Further, we find that most of these process specific new roles tend to be realized via prepositional, noun-noun, or other noun modifier relations that attach to one of the existing roles. Information about how these candidates are related to currently identified roles is likely to help.
+We propose to investigate methods for identifying candidates for new role fillers and methods to score the candidates. 
+Our intuition is that information about how candidates are related to currently identified roles is helpful in scoring possible candidates. 
+As part of our preliminary work, we find that most of these process specific new roles tend to be realized via prepositional, noun-noun, or other noun modifier relations that attach to one of the existing roles. 
 
-\begin{itemize}
-\item We propose to investigate methods for breaking coarse-grained roles into multiple sub-roles.
- and preposition relation extraction tools 
+{\bf Candidate Identification} We use two sources for identifying candidates. First, we obtain candidates from the local extraction pipeline that were assigned low scores by the inference and then we extend it with candidates from a separate PropBank style argument identification pipeline~\cite{lang-naacl2010}. Second, we also inspect role fillers for existing roles that can be broken up into fine-grained roles. For example, "towards a light source" can be further split into two roles one relating to the "direction" of the growth and the other relating to the goal "light source".
 
-We use two sources for identifying candidates. 
-First, we obtain candidates from the local extraction pipeline that were assigned low scores by the inference and then we extend it with candidates from a separate PropBank style argument identification pipeline~\cite{}. Second, we also inspect role fillers for existing roles that can be broken up into fine-grained roles. For example, "towards a light source" can be further split into two roles one relating to the "direction" of the growth and the other relating to the goal "light source".
+{\bf Scoring} Having identified candidates we iterate through the pipeline to find additional sentences that contain these candidates and the core roles or predicates for the process. Following prior role induction work, we extract a context signature for each candidate and cluster the candidates that are realized with similar contexts. 
+The key contribution here is that we extend the signature with semantic contexts that include information about the currently identified roles. 
 
-\item Having identified candidates we iterate through the pipeline to find additional sentences that contain these candidates and the core roles or predicates for the process. Following prior role induction work, we extract a context signature for each candidate and cluster the candidates that are realized with similar contexts. As mentioned earlier, we propose to also use the semantic role context of the candidates. 
-
-\end{itemize}
 
 
 

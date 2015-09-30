@@ -4,15 +4,15 @@
 AI systems have achieved impressive success with answering factual questions 
 (e.g., "When was Bill Clinton born?"), using information from large-scale text or database resources~\cite{berant2013semantic,fader2014open,bordes2014open,reddy2014large,watson}. 
 To scale more challenging problems that go beyond factual answer retrieval~\cite{richardson2013mctest,clark2015elementary,berantSrikumar14}, 
-AI systems will need the ability to reason about the world. In particular they need knowledge of generalities 
-and how it applies to the specific situations. Despite significant advances in AI, acquiring 
+AI systems will need the ability to reason about the world. 
+In particular they need knowledge of generalities and how it applies to the specific situations. Despite significant advances in AI, acquiring 
 general knowledge and using it to reason effectively remains a huge challenge.
 %and applying general knowledge about the world remains a huge challenge. 
 
 We propose to investigate this challenge in the context of learning and reasoning about {\em processes}.
 Knowledge about processes is a fundamental to part of our understanding of the world and it is 
 essential to make predictions and answer questions about specific scenarios involving them.
-Our goal is to develop solutions to automatically construct a large repository of simple process knowledge 
+Our goal is to develop solutions to construct a large repository of simple process knowledge 
 automatically, and demonstrate its use to answer process questions that go beyond fact lookup. 
 
 \subsection{Motivation}
@@ -34,7 +34,7 @@ Then, knowledge about {\em heating} should allow it to conclude that the thing b
 Knowledge about {\em conduction} should suggest that anything {\em in direct contact} with a hot object (the pot handle) should also become hot.
 Combining these bits the system can verify that the described scenario indeed matches the conduction process.
 Replicating this type of reasoning requires knowledge about conduction and heating in a suitable computational representation.
-\todo{[Reads very rough.]}
+
 %Specifically the knowledge about conduction should convey that there are two entities that are in direct contact, one of which is being heated or is hot, 
 %and the result of conduction is that the other object also becomes {\em hot}. 
 

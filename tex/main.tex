@@ -12,17 +12,22 @@
 \usepackage{amssymb}
 \usepackage{enumitem}
 
+
 \newcommand{\eat}[1]{}
 \newcommand{\todo}[1]{\textcolor{blue}{TODO: #1}}
 \input{pgformat}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
+%\setlength{\parindent}{0.5pt}
+%\setlength{\parskip}{0.25em}
 \begin{document}
 \include{weld-defns}
-\title{Composing Process Knowledge using Semantic Roles}
+\title{CRII:III: Composing Process Knowledge using Semantic Roles}
 \author{Niranjan Balasubramanian}
 \maketitle
 \newpage
 \thispagestyle{empty}
-%\input{summary}     % A. Project Summary - 1 page
+%\input{one-pager}     % A. Project Summary - 1 page
 \newpage
 \tableofcontents    % B. Form 1359
 \thispagestyle{empty}
@@ -32,12 +37,12 @@
 %
 \setcounter{page}{1}
 \input{intro}
-%\input{background}
+\input{background}
 \input{srl}
 \input{discovery}
 \input{evaluation}
 \input{supporting}
-
+\newpage
 {\small
 \bibliographystyle{plain}
 \bibliography{main}

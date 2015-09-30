@@ -1,23 +1,21 @@
 % !TEX root =  main.tex
-\newcommand{\sys}{ProcIterRoles}
+%\newcommand{\sys}{ProcIterRoles}
 
-\section{\sys Architecture}
+\section{System Architecture}
 
+Figure~\ref{fig:architecture} shows our envisioned architecture.
+The main idea is to collect high quality sentences and roles and iteratively expand the acquisition to include additional sentences and other roles. 
 \begin{figure}[hbt]
 	\begin{center}
 	%6.44 x 3.99
 	%6.89 x 5.42
 	% 11.36 x 5.42
 	\includegraphics[width=5.68in,height=2.21in]{figures/architecture.pdf} 	
-	\caption{\label{fig:architecture} {Process KB Acquisition: Proposed Architecture}}
+	\caption{\label{fig:architecture} {System Architecture}}
 	\end{center}
 \end{figure}
 
-\sys\ allows for targeted iterative extraction and expansion of process roles.
-The main idea is to collect high quality sentences and roles and iteratively expand the acquisition to include
-additional sentences and other roles. 
-
-Figure~\ref{fig:architecture} shows the architecture of the acquisition process. 
+%\sys\ allows for targeted iterative extraction and expansion of process roles.
 Using simple query patterns we search for sentences that express roles with highly regular lexical cues. 
 A sentence filter addresses sense issues and to remove malformed sentences.
 The filtered sentences are then processed through a pattern-based extractor that identifies and scores the candidate roles. 
@@ -29,37 +27,45 @@ New query patterns are created for the roles that need addition and whole proced
 
 In the subsequent sections, we describe each component in greater detail.
 
-\section{Sentence Gathering}
+\section{Automatic Extraction of Process Knowledge} 
 
-\sys\ will leverage the vastness of the web to build a targeted collection of sentences that expresses roles of interest.
-There are two key challenges to address in gathering relevant sentences:
+\subsection{Sentence Gathering}
+
+We will leverage the vastness of the web to build a targeted collection of sentences that expresses roles of interest.
+Ability to locate many information bearing sentences is critical to the success of our approach.
+We anticipate two main challenges in gathering relevant sentences:
 \begin{itemize}
-\item {\bf Relevance} -- We want to find sentences that describe the target process of interest. 
-The vastness of the web also means that there is information on nearly any possible interpretation of the words used to describe the process. 
+\item {\bf Relevance} -- The vastness of the web also means that there is information on nearly any possible interpretation of the words used to describe the process. 
 For instance if we are interested in the process {\em crop fertilization}, we might also find information on {\em fertilization} in the reproductive sense, 
-or in other metaphorical uses such as {\em cross fertilization of ideas}. 
-Also, the target sense may not be a dominant sense on the web. 
+or in other metaphorical uses such as {\em cross fertilization of ideas}. Also, the target sense may not be a dominant sense on the web. 
 Constructing effective keyword queries is therefore critical for finding relevant information.
 \item {\bf Role Coverage} -- We want to find sentences that cover all applicable roles that convey the desired information via simple expected constructions.
 Some roles are often expressed via highly regular lexico-syntactic constructions. 
 On the other hand, roles such as {\em x} can be expressed in many different ways. 
 Again with the vastness of the web, constructing effective role patterns is critical for finding useful sentences. 
 \end{itemize}
+To address these challenges we espouse a feedback strategy:
+High quality sentences gathered in earlier phases can guide search in later stages. 
+We find that definitional sentences can be found reliably using simple lexical patterns and they convey the most salient information. 
+Therefore, we first target definitional sentences, and in subsequent iterations, we use them as a guide for finding additional sentences involving other roles.
+%Second, we espouse a feedback strategy that leverages high quality sentences gathered in the earlier phases to guide search in the later stages.
 
-To address these challenges we propose two strategies. First, we target definitional sentences which convey the most salient information. Second, we espouse a feedback strategy that leverages high quality sentences gathered in the earlier phases to guide search in the later stages.
-
-\subsection{Role Query Generator}
+\subsubsection{Role Query Generator}
 
 We propose to investigate simple but effective query pattern formulation methods. 
 Our preliminary work shows that simple lexical templates e.g., "<process name> is the process by which" can yield high quality {\em definitional} sentences about processes. 
 We use additional lexical templates for roles with regular lexicon-syntactic constructions e.g., "<process name> causes" is an effective pattern to find sentences that express the {\em result} roles of processes. The key challenge is to figure out querying patterns for roles with diverse lexical realizations. We propose adopting the standard bootstrapping approach used in relation extraction techniques to borrow functional patterns that introduce roles in other processes. Bootstrapping is known to introduce noise and topic drift issues. However, our approach doesn't entirely rely on the patterns alone. Rather we propose strong scoring and filtering mechanisms that can remove noise introduced via bootstrapping.
 %On a related task, our prior work had explored techniques that can find sentences that convey information about different aspects with respect to a topic (e.g., biographical aspects of a person). 
-\subsection{Sentence Classifier}
+\subsubsection{Sentence Classifier}
+Sentences from the web have high variance in quality and relevance.  
+To account for the challenges in relevance, we build a classifier that is trained to identify malformed sentences. 
+We adopt a sentence classifier that we built in our prior work for identifying biographical sentences from the web~\cite{balasubramanian2009automatic}.
+The classifier will use morphologic (capitalization, special characters etc.), and n-gram language model features to prune low quality sentences. 
+In addition we extend this classifier to also use a distributional context model built from a target domain corpus (e.g. 4th grade science book). 
+The relevance of the sentence and its surrounding context is evaluated against this context model for filtering out out-of-domain senses and usages.
+This context model allows us to guard against topic drift issues that could arise in subsequent bootstrap iterations.
 
-To account for the challenges in relevance, we seek to build a distributional context model that is seeded with some domain corpus. This model is then refined iteratively to allow for role coverage. 
-Sentences from the web have high variance in quality and relevance. 
-
-\section{Extraction}
+\subsection{Extraction}
 
 Many different approaches have been investigated for role labeling.
 The learning formulations studied range from pipelined classification approaches~\cite{gildea2002automatic,bjorkelund2009multilingual}, 
@@ -76,9 +82,9 @@ we pose a classification task to determine if the candidate  is indeed expressin
 Then, we pose a joint inference task over multiple sentences, which allows us to use role decisions on similar 
 text spans to influence each other. 
 
-\subsection{Pattern-based Extraction}
+\subsubsection{Pattern-based Extraction}
 
-We set up a local (within sentence per role) extraction task. Relying on the patterns alone is problematic. Hand authored patterns, especially specifying the expected syntactic structure of the argument is quite limiting. Instead we generate many possible arguments that match a range of weakly indicative argument patterns and train a classifier. 
+We set up a local -- within sentence and per role -- extraction task. Relying on the patterns alone is problematic. Hand authored patterns, especially with specified syntactic structure of the argument is quite limiting. Instead we generate many possible arguments that match a range of weakly indicative argument patterns and train a classifier. 
 
 The inputs are a sentence $S$, the role $R$ for which it was retrieved, and the role pattern $X_R$ that it matches, and a set of candidate spans $C$.
 The task is to predict if for each span if it is expressing the role of interest. 
@@ -94,7 +100,7 @@ Similarly, the frames that are evoked by the predicates in the sentence also pro
 frame in a sentence increases the possibility of finding a result of a change of state of process like evaporation. 
 
 \item Also we have strong expectations on {\em how} the argument is realized because the sentence is retrieved via a specific query pattern.
-This allows us to encode features that test if the expectations are met. [{\bf Explain w/ an example}]
+This allows us to encode features that test if these expectations are met. 
 
 \end{itemize}
 
@@ -107,20 +113,34 @@ This allows us to encode features that test if the expectations are met. [{\bf E
 %Rather, the roles are identified with respect to a canonical realization of the process. 
 %One can view this task as that of mapping from the predicate-specific semantic role to the process-specific role. 
 
-\subsection{Joint Role Inference}
+\subsubsection{Joint Role Inference}
+%Within sentence joint role inference has been shown to help SRL~\cite{punyakanok2004srl,koomen2005generalized}.
+%Since our objective is to extract knowledge from multiple sentences, we propose to also exploit joint inference of roles across sentences. 
+Local role extraction allows us to reliably identify whether the specified role is expressed by the candidate text spans. 
+However, this local classification can suffer because some cue patterns are ambiguous. 
+For example, "evaporates into <x>" can match "steam" which is a {\em result} or "atmosphere" which is a {\em location}. 
+If the {\em atmosphere} were in fact a {\em result}, we hope to leverage information from other sentences where it is expressed via less asmbiguous patterns.
+Therefore, we propose to leverage role predictions on other similar text spans to improve inference. 
 
-Within sentence joint role inference has been shown to help SRL~\cite{punyakanok2004srl,koomen2005generalized}.
-Since our objective is to extract knowledge from multiple sentences, we propose to also exploit joint inference of roles across sentences. Local role extraction allows to reliably identify whether the specified role is expressed by the candidate text spans. However, this local classification is often inadequate because some cue patterns are ambiguous. For example, "evaporates into <x>" can match "steam" which is a {\em result} or "atmosphere" which is a {\em location}. Relying on the extraction pattern alone is problematic. Therefore, we propose to leverage role predictions on other similar text spans to improve inference. 
+Effectively, our proposal is to combine ideas from two threads of prior work:
+Semi-supervised and unsupervised SRL have exploited labels on similar text spans to account for sparse training data~\cite{furstenau-emnlp2009,furstenau2012semi,lang-emnlp2011}. 
+Joint modeling techniques have leveraged structural and linguistic constraints to improve within sentence role labeling~\cite{punyakanok2004srl,koomen2005generalized,srikumar2011joint}.
+We will investigate methods that allow us to effectively incorporate this in joint inference.
 
+{\bf Modeling Example}
+ILP-based formalisms have been successfully used for joint inference for SRL~\cite{punyakanok2004srl,koomen2005generalized,srikumar2011joint}. 
+Joint inference across sentences can be cast as the task of finding role label assignments that {\em minimize label disagreements across sentences for similar text spans}, 
+while also respecting {\em within sentence structural and linguistic constraints on roles}~\cite{punyakanok2004srl}. 
+We sketch an example instantiation of this idea as an ILP:
 
-{\bf Formalism}
+Let $\rho(t_{ik}, r_j)$ indicate the local extractor scores for text span $t_{i,k}$ from sentence $S_k$ on how likely it is to belong to the role $r_j$. Use indicator variables to denote role assignment. $z_{ijk}$ represents if the text span $t_{ik}$ in sentence $S_k$ is assigned the role $r_j$. 
+Find the best joint assignment to set of indicator variables $\mathbb{z}$ that maximizes the sum of extractor scores with penalties for assignments that violate smoothness of labeling.
+Use constraints or parameterizations that effectively fix labels from the local extractor for certain roles. 
+Formally, the inference aims to find the best joint assignment to set of indicator variables $\mathbb{z}$ that maximizes the following objective function:
 
-The key premise is that aligned text spans in similar sentences should be assigned same roles. This idea had been successfully used in semi-supervised and unsupervised settings to increase training data for SRL~\cite{furstenau-emnlp2009,furstenau2012semi,lang-emnlp2011}. We adopt it for joint inference over test sentences, similar to the transductive learning approaches~\cite{?}.
-
-We extend an ILP-based formalism which has been shown to successfully model within sentence joint inference for SRL~\cite{punyakanok2004srl}. We add 1) a penalty term to the maximization objective that penalizes assignments that violate smoothness of labeling, 2) constraints that effectively fix labels from the local extractor for certain roles. 
-
-As noted earlier, the local extractor scores each text span $t_{i,k}$ from sentence $S_k$ on how likely it is to belong to the role $r_j$. We use indicator variables to denote role assignment. $z_{ijk}$ represents if the text span $t_{ik}$ in sentence $S_k$ is assigned the role $r_j$. Formally, the inference aims to find the best joint assignment to set of indicator variables $\mathbb{z}$ that maximizes the following objective function:
-
+\begin{center}
+\framebox{
+\begin{minipage}{36em}
 \begin{align*}
 %\sum_{t_{ik}} \sum_{r_j} 
  \arg\max_{\mathbf{z}}  \sum_{i,j,k} z_{ijk} \cdot \rho(t_{ik}, r_j) \cdot \lambda_{j}
@@ -130,50 +150,45 @@ As noted earlier, the local extractor scores each text span $t_{i,k}$ from sente
 \forall S_k \forall c \in |R|, \sum_{t_{ik} \in S_k} z_{ick} \le 1  & \mbox{[Roles are not repeated.]} \\
  \cdots&  \mbox{[Other within sentence constraints.]}
 \end{align*}
+\end{minipage}
+}\\
+
+\end{center}
+
 
 {\bf Alignment}
 
-The effectiveness of the joint inference relies on the ability to identify text spans in different sentences that should get the same role. 
-Prior work explored a dependency graph-based approach to align predicate-argument structures in sentences. A linear combination of the overlap in lexical and syntactic structures of the candidate text spans is used to evaluate whether they should get the same roles~\cite{furstenau-emnlp2009,furstenau2012semi,lang-naacl2010}.
-This scoring function is used to transfer roles from a labeled sentence to an unlabeled sentence (semi-supervised setting) or to induce roles as clusters of arguments (unsupervised setting). 
-
-A key difference in our setting is that there are different sub-groups of sentences with different alignment characteristics. 
+One of the key challenges in joint inference is to identify text spans in different sentences that should get the same role. 
+Aligning text spans in web retrieved sentences poses many challenges. 
+There are different sub-groups of sentences with different alignment characteristics. 
 {\em Definition} sentences describe the process in terms of classes of entities and {\em instance} sentences which involve specific entities.
-Aligning definitional sentences is quite different from aligning definitions with instances or instances with other instances. 
 Instances involve completely different entities which may not align via direct entailment but may align as substitutable siblings.
-Also, instances often tend to involve other non-essential information with respect to the process, 
-whereas definitions are compact and tend to contain the most salient bits of information. 
-To account for these differences we consider two extensions. Use different sets of weights and different similarity functions to combine the scores based on the types of sentences being aligned.
+Also, instances may include intervening unrelated information, whereas definitions are compact and tend to contain the most salient bits of information. 
 
+\eat{A key difference in our setting is that there are different sub-groups of sentences with different alignment characteristics. 
+{\em Definition} sentences describe the process in terms of classes of entities and {\em instance} sentences which involve specific entities.
+Instances involve completely different entities which may not align via direct entailment but may align as substitutable siblings.
+Also, instances may include intervening unrelated information, whereas definitions are compact and tend to contain the most salient bits of information. 
+%Aligning definitional sentences is quite different from aligning definitions with instances or instances with other instances. 
+%This scoring function is used to transfer roles from a labeled sentence to an unlabeled sentence (semi-supervised setting) or to induce roles as clusters of arguments (unsupervised setting). 
+}
+
+Our work will investigate methods that addresses these challenges using various information sources.
+We propose to train a feature-based classifier that combines many indicative features including source query patterns that were used to retrieve the sentences,
+textual entailment scores of the spans~\cite{stern2012biutee}, alignment scores of the words within the spans~\cite{yao2013lightweight}, 
+as well as use paraphrastic scores from resources such as PPDB~\cite{PavlickEtAl-2015:ACL:Semantics}.
+
+To more explicitly account for alignments from different sentence types, we also consider parameterizations that allow different sets of weights 
+and similarity functions based on the types of sentences being aligned. 
+For example, a predicate-argument alignment function used in prior work~\cite{furstenau-emnlp2009,furstenau2012semi,lang-naacl2010}, 
+can be parameterized with the types of sentences (u, v) of the candidate spans as below:
 \begin{align*}
 \sigma(t_{ik}, t_{lm}, u, v)	= \alpha_{uv} \cdot lexsim_{uv}(t_{ik}, t_{lm}) + (1 - \alpha_{uv}) \cdot synsim_{uv}(t_{ik}, t_{lm})\\
+\vspace{-2em}
 \end{align*}
 
-[{\bf Consider changing this to a trained classifier. Use sentence patterns rather than definition or instance sentence distinction.}]
+%[{\bf Consider changing this to a trained classifier. Use sentence patterns rather than definition or instance sentence distinction.}]
 
-\eat{
-
-[{\bf To be redone. Emphasize role discovery.}]
-Inference yields a set of roles that can be reliably identified from the input set of sentences. 
-The knowledge thus gathered is limited by the query patterns that we used to retrieve the sentences in the first place. 
-To expand the knowledge further, we propose an iterative procedure that learns from the inferred roles. 
-
-\subsection{Aggregation}
-First, given the current state of the knowledge base and newly inferred roles we devise a simple aggregation procedure that consolidates the roles -- resolving any inconsistencies between the different iterations\footnote{
-It is possible to infer new roles with respect to the KB at each iteration, it can introduce many variables 
-in inference and render it inefficient.
-}.
-
-\subsection{Assessment}
-
-We inspect the KB to identify roles that apply for a specific process based on the confidences of the inferred roles. 
-Note that we do not make any assumptions a priori about what roles apply to a process. 
-Further not all roles maybe covered by the roles vocabulary. For example, ....
-We identify regular syntactic signatures that are not classified into existing roles and use them to derive new knowledge.
-
-
-need to be filled, and pass them on to the sentence gathering components for expansion.
-}
 
 %instantiate new patterns to identify better sentences. The idea is to evaluate lexical alternatives that can form better queries to identify sentences. For example, sentences describing instances of conduction of heat are better found by adding {\em heat}. This type of query expansion using pseudo-relevance feedback is a well studied technique in information retrieval. We consider a restricted version of this problem, where are looking to instantiate existing query templates. 
 
